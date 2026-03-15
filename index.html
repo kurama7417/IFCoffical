@@ -341,3 +341,44 @@ document.getElementById("place-btn").addEventListener("click",async()=>{
   }
 });
 </script>
+document.getElementById("place-btn").onclick = async () => {
+
+  const name = document.getElementById("cname").value;
+  const phone = document.getElementById("cphone").value;
+  const address = document.getElementById("caddress").value;
+
+  const items = Object.values(cart);
+
+  const payload = {
+    customer_name: name,
+    phone: phone,
+    address: address,
+    items: items,
+    total: items.reduce((t,i)=>t + i.price*i.qty,0)
+  };
+
+  try {
+
+    const res = await fetch(WEBHOOK, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(payload)
+    });
+
+    const data = await res.json();
+
+    document.getElementById("smsg").style.display="block";
+    document.getElementById("smsg").className="smsg ok";
+    document.getElementById("smsg").innerText="Order sent successfully!";
+
+  } catch(err){
+
+    document.getElementById("smsg").style.display="block";
+    document.getElementById("smsg").className="smsg err";
+    document.getElementById("smsg").innerText="Failed to send order.";
+
+  }
+
+};
