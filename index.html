@@ -1,34 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Island Fried Chicken — Online Menu</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html,body{width:100%;max-width:480px;margin:0 auto;font-family:var(--font-sans);background:#f2ede8;color:var(--color-text-primary);font-size:16px}
+html,body{width:100%;max-width:480px;margin:0 auto;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f2ede8;color:#1a1a1a;font-size:16px}
 .hdr{background:#C0392B;color:#fff;padding:20px 16px 16px;text-align:center}
 .hdr-ring{width:66px;height:66px;border-radius:50%;background:#fff;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;border:3px solid rgba(255,255,255,0.35);font-size:22px;font-weight:500;color:#C0392B}
 .hdr h1{font-size:22px;font-weight:500;line-height:1.2}
 .hdr p{font-size:13px;opacity:0.82;margin-top:5px}
-.tabs-wrap{background:var(--color-background-primary);border-bottom:0.5px solid var(--color-border-tertiary);display:flex;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.tabs-wrap{background:#fff;border-bottom:0.5px solid rgba(0,0,0,0.1);display:flex;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
 .tabs-wrap::-webkit-scrollbar{display:none}
-.tab{flex-shrink:0;padding:14px 15px;font-size:13px;font-weight:500;color:var(--color-text-secondary);border:none;background:none;cursor:pointer;border-bottom:2.5px solid transparent;white-space:nowrap;min-height:48px;display:flex;align-items:center}
+.tab{flex-shrink:0;padding:14px 15px;font-size:13px;font-weight:500;color:#666;border:none;background:none;cursor:pointer;border-bottom:2.5px solid transparent;white-space:nowrap;min-height:48px;display:flex;align-items:center}
 .tab.on{color:#C0392B;border-bottom-color:#C0392B}
 .section{padding:14px;display:none}
 .section.on{display:block}
-.sec-lbl{font-size:11px;font-weight:500;color:var(--color-text-secondary);letter-spacing:0.9px;text-transform:uppercase;margin-bottom:12px}
+.sec-lbl{font-size:11px;font-weight:500;color:#888;letter-spacing:0.9px;text-transform:uppercase;margin-bottom:12px}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 @media(max-width:360px){.grid2{grid-template-columns:1fr}}
-.card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:14px;overflow:hidden;transition:border-color 0.15s}
+.card{background:#fff;border:0.5px solid rgba(0,0,0,0.1);border-radius:14px;overflow:hidden;transition:border-color 0.15s}
 .card.sel{border:2px solid #C0392B}
 .card-img{width:100%;height:120px;object-fit:cover;display:block;background:#f0ebe5}
 .card-img-ph{width:100%;height:120px;display:none;align-items:center;justify-content:center;font-size:40px;background:#faf5f0}
 .card-body{padding:11px 12px 13px}
 .card-code{font-size:11px;font-weight:500;color:#C0392B;margin-bottom:3px;letter-spacing:0.4px}
-.card-name{font-size:14px;font-weight:500;color:var(--color-text-primary);line-height:1.35}
-.card-desc{font-size:12px;color:var(--color-text-secondary);margin-top:3px;line-height:1.4}
+.card-name{font-size:14px;font-weight:500;color:#1a1a1a;line-height:1.35}
+.card-desc{font-size:12px;color:#888;margin-top:3px;line-height:1.4}
 .card-footer{display:flex;align-items:center;justify-content:space-between;margin-top:10px;gap:6px}
 .card-price{font-size:15px;font-weight:500;color:#C0392B;flex-shrink:0}
 .qty-row{display:flex;align-items:center;gap:8px;flex-shrink:0}
 .qb{width:36px;height:36px;min-width:36px;border-radius:50%;border:2px solid #C0392B;background:none;color:#C0392B;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;transition:all 0.12s;padding:0;touch-action:manipulation}
 .qb:active{background:#C0392B;color:#fff;transform:scale(0.9)}
-.qn{font-size:16px;font-weight:500;min-width:20px;text-align:center;color:var(--color-text-primary)}
+.qn{font-size:16px;font-weight:500;min-width:20px;text-align:center;color:#1a1a1a}
 .chicken-banner{background:#C0392B;border-radius:13px;padding:14px;margin-bottom:12px;color:#fff}
 .cb-title{font-size:14px;font-weight:500;margin-bottom:10px}
 .cb-prices{display:grid;grid-template-columns:1fr 1fr;gap:8px}
@@ -36,37 +41,39 @@ html,body{width:100%;max-width:480px;margin:0 auto;font-family:var(--font-sans);
 .cb-item:active{background:rgba(255,255,255,0.3)}
 .cb-item.sel{border-color:#fff;background:rgba(255,255,255,0.25)}
 .cb-item span{font-size:12px;opacity:0.82;display:block;margin-top:2px}
-.divider{border:none;border-top:0.5px solid var(--color-border-tertiary);margin:14px 0}
-.cart-panel{background:var(--color-background-primary);border-top:1px solid var(--color-border-secondary);padding:18px 16px 24px}
+.divider{border:none;border-top:0.5px solid rgba(0,0,0,0.1);margin:14px 0}
+.cart-panel{background:#fff;border-top:1px solid rgba(0,0,0,0.12);padding:18px 16px 24px}
 .cart-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:13px}
-.cart-hdr-title{font-size:17px;font-weight:500;color:var(--color-text-primary)}
+.cart-hdr-title{font-size:17px;font-weight:500;color:#1a1a1a}
 .cbadge{background:#C0392B;color:#fff;font-size:12px;font-weight:500;padding:4px 12px;border-radius:99px}
-.empty-cart{font-size:14px;color:var(--color-text-secondary);padding:6px 0 8px}
-.cline{display:flex;align-items:center;padding:9px 0;border-bottom:0.5px solid var(--color-border-tertiary);gap:8px}
+.empty-cart{font-size:14px;color:#888;padding:6px 0 8px}
+.cline{display:flex;align-items:center;padding:9px 0;border-bottom:0.5px solid rgba(0,0,0,0.08);gap:8px}
 .cline:last-of-type{border:none}
-.cline-name{font-size:14px;color:var(--color-text-primary);flex:1;line-height:1.3}
-.cline-qty{font-size:13px;color:var(--color-text-secondary);flex-shrink:0}
-.cline-price{font-size:14px;color:var(--color-text-secondary);flex-shrink:0}
-.cline-rm{background:none;border:none;color:var(--color-text-secondary);cursor:pointer;font-size:20px;padding:0 0 0 8px;line-height:1;flex-shrink:0;min-width:32px;min-height:32px;display:flex;align-items:center;justify-content:center}
-.total-row{display:flex;justify-content:space-between;font-size:17px;font-weight:500;padding-top:12px;border-top:0.5px solid var(--color-border-secondary);margin-top:6px}
+.cline-name{font-size:14px;color:#1a1a1a;flex:1;line-height:1.3}
+.cline-qty{font-size:13px;color:#888;flex-shrink:0}
+.cline-price{font-size:14px;color:#888;flex-shrink:0}
+.cline-rm{background:none;border:none;color:#888;cursor:pointer;font-size:20px;padding:0 0 0 8px;line-height:1;flex-shrink:0;min-width:32px;min-height:32px;display:flex;align-items:center;justify-content:center}
+.total-row{display:flex;justify-content:space-between;font-size:17px;font-weight:500;padding-top:12px;border-top:0.5px solid rgba(0,0,0,0.12);margin-top:6px}
 .total-price{color:#C0392B}
 .fields{margin-top:14px;display:flex;flex-direction:column;gap:10px}
-.fields input,.fields textarea{width:100%;font-size:16px;padding:14px;border:0.5px solid var(--color-border-secondary);border-radius:11px;background:var(--color-background-primary);color:var(--color-text-primary);-webkit-appearance:none;appearance:none;font-family:var(--font-sans)}
+.fields input,.fields textarea{width:100%;font-size:16px;padding:14px;border:0.5px solid rgba(0,0,0,0.2);border-radius:11px;background:#fff;color:#1a1a1a;-webkit-appearance:none;appearance:none;font-family:inherit}
 .fields textarea{resize:none;height:80px;line-height:1.5}
 .fields input:focus,.fields textarea:focus{outline:none;border-color:#C0392B;border-width:1.5px}
 .place-btn{width:100%;margin-top:13px;padding:17px;background:#C0392B;color:#fff;border:none;border-radius:13px;font-size:16px;font-weight:500;cursor:pointer;letter-spacing:0.3px;transition:opacity 0.15s;touch-action:manipulation;min-height:56px}
 .place-btn:disabled{opacity:0.38;cursor:not-allowed}
 .place-btn:not(:disabled):active{opacity:0.82}
 .smsg{margin-top:12px;padding:13px 14px;border-radius:10px;font-size:14px;font-weight:500;text-align:center;display:none;line-height:1.4}
-.smsg.ok{background:var(--color-background-success);color:var(--color-text-success)}
-.smsg.err{background:var(--color-background-danger);color:var(--color-text-danger)}
-.smsg.wait{background:var(--color-background-warning);color:var(--color-text-warning)}
+.smsg.ok{background:#d4edda;color:#155724}
+.smsg.err{background:#f8d7da;color:#721c24}
+.smsg.wait{background:#fff3cd;color:#856404}
 </style>
+</head>
+<body>
 
 <div class="hdr">
   <div class="hdr-ring">IFC</div>
   <h1>Island Fried Chicken</h1>
-  <p>Real Taste of Fried Chicken 鈥� Hulhumale, Maldives</p>
+  <p>Real Taste of Fried Chicken — Hulhumale, Maldives</p>
 </div>
 
 <div class="tabs-wrap" id="tabs">
@@ -108,7 +115,7 @@ html,body{width:100%;max-width:480px;margin:0 auto;font-family:var(--font-sans);
 
 <div class="cart-panel">
   <div class="cart-hdr"><span class="cart-hdr-title">Your Order</span><span class="cbadge" id="cbadge">0 items</span></div>
-  <div id="cart-lines"><div class="empty-cart">No items yet 鈥� tap any meal to add it.</div></div>
+  <div id="cart-lines"><div class="empty-cart">No items yet — tap any meal to add it.</div></div>
   <div class="fields">
     <input type="text" id="cname" placeholder="Your name" autocomplete="name" />
     <input type="tel" id="cphone" placeholder="Phone number" autocomplete="tel" />
@@ -119,7 +126,7 @@ html,body{width:100%;max-width:480px;margin:0 auto;font-family:var(--font-sans);
 </div>
 
 <script>
-const WEBHOOK="https://YOUR-N8N-WEBHOOK-URL/webhook/ifc-order";
+const WEBHOOK="https://kurama7417.app.n8n.cloud/webhook-test/b407ab0c-1f56-4c81-980e-a11ac259c1ef";
 const IMGS={
   individual:"https://images.unsplash.com/photo-1626645738196-c2a7c87a8f58?w=400&q=80",
   budget:"https://images.unsplash.com/photo-1561758033-d89a9ad46330?w=400&q=80",
@@ -201,9 +208,9 @@ const menus={
     {code:"IFC D2",name:"Tandoori Burger",desc:"Tandoori spiced burger",price:65,img:IMGS.burger},
     {code:"IFC D3",name:"C.W. Burger",desc:"Chicken & Waffle burger",price:65,img:IMGS.burger},
     {code:"IFC D4",name:"Beef Burger",desc:"100% beef patty burger",price:75,img:IMGS.burger},
-    {code:"IFC E1",name:"Mini Sub 鈥� Toasted + Cheese",desc:"Toasted mini sub with cheese",price:69,img:IMGS.sub},
-    {code:"IFC E2",name:"Mini Sub 鈥� Crispy",desc:"Crispy chicken mini sub",price:69,img:IMGS.sub},
-    {code:"IFC E3",name:"Mini Sub 鈥� Deli",desc:"Deli style mini sub",price:69,img:IMGS.sub},
+    {code:"IFC E1",name:"Mini Sub - Toasted + Cheese",desc:"Toasted mini sub with cheese",price:69,img:IMGS.sub},
+    {code:"IFC E2",name:"Mini Sub - Crispy",desc:"Crispy chicken mini sub",price:69,img:IMGS.sub},
+    {code:"IFC E3",name:"Mini Sub - Deli",desc:"Deli style mini sub",price:69,img:IMGS.sub},
   ],
   pizza:[
     {code:"IFC K1",name:"Kids Special Pizza",desc:"L: MVR 110 / M: MVR 59",price:110,img:IMGS.pizza},
@@ -214,10 +221,10 @@ const menus={
     {code:"IFC K6",name:"BBQ Beef Pepperoni Pizza",desc:"L: MVR 125 / M: MVR 59",price:125,img:IMGS.pizza},
   ],
   conepizza:[
-    {code:"IFC J1",name:"Cone Pizza 鈥� Medium",desc:"Classic medium cone pizza",price:39,img:IMGS.conepizza},
-    {code:"IFC J2",name:"Cone Pizza 鈥� Crispy",desc:"Crispy cone pizza",price:39,img:IMGS.conepizza},
-    {code:"IFC J3",name:"Cone Pizza 鈥� BBQ",desc:"BBQ flavour cone pizza",price:39,img:IMGS.conepizza},
-    {code:"IFC J4",name:"Cone Pizza 鈥� Classic",desc:"Classic cone pizza",price:39,img:IMGS.conepizza},
+    {code:"IFC J1",name:"Cone Pizza - Medium",desc:"Classic medium cone pizza",price:39,img:IMGS.conepizza},
+    {code:"IFC J2",name:"Cone Pizza - Crispy",desc:"Crispy cone pizza",price:39,img:IMGS.conepizza},
+    {code:"IFC J3",name:"Cone Pizza - BBQ",desc:"BBQ flavour cone pizza",price:39,img:IMGS.conepizza},
+    {code:"IFC J4",name:"Cone Pizza - Classic",desc:"Classic cone pizza",price:39,img:IMGS.conepizza},
   ],
   otg:[
     {code:"IFC H1",name:"Chicken Waffle",desc:"Crispy chicken waffle on the go",price:35,img:IMGS.waffle},
@@ -256,7 +263,7 @@ function buildCards(gid,items){
   items.forEach((item,i)=>{
     const key=gid+"_"+i;
     const d=document.createElement("div");d.className="card";d.id="c_"+key;
-    d.innerHTML=`<img class="card-img" src="${item.img}" alt="${item.name}" loading="lazy" onerror="this.style.display='none';this.nextSibling.style.display='flex'"><div class="card-img-ph">馃崡</div><div class="card-body"><div class="card-code">${item.code}</div><div class="card-name">${item.name}</div><div class="card-desc">${item.desc}</div><div class="card-footer"><div class="card-price">MVR ${item.price}</div><div class="qty-row"><button class="qb" onclick="event.stopPropagation();chg('${key}',${i},'${gid}',-1)">鈭�</button><span class="qn" id="qn_${key}">0</span><button class="qb" onclick="event.stopPropagation();chg('${key}',${i},'${gid}',1)">+</button></div></div></div>`;
+    d.innerHTML='<img class="card-img" src="'+item.img+'" alt="'+item.name+'" loading="lazy" onerror="this.style.display=\'none\';this.nextSibling.style.display=\'flex\'"><div class="card-img-ph">&#x1F357;</div><div class="card-body"><div class="card-code">'+item.code+'</div><div class="card-name">'+item.name+'</div><div class="card-desc">'+item.desc+'</div><div class="card-footer"><div class="card-price">MVR '+item.price+'</div><div class="qty-row"><button class="qb" onclick="event.stopPropagation();chg(\''+key+'\','+i+',\''+gid+'\',-1)">&#x2212;</button><span class="qn" id="qn_'+key+'">0</span><button class="qb" onclick="event.stopPropagation();chg(\''+key+'\','+i+',\''+gid+'\',1)">&#x2B;</button></div></div></div>';
     g.appendChild(d);
   });
 }
@@ -281,13 +288,13 @@ function renderCart(){
   const btn=document.getElementById("place-btn");
   const total=keys.reduce((s,k)=>s+cart[k].qty,0);
   badge.textContent=total+(total===1?" item":" items");
-  if(keys.length===0){lines.innerHTML='<div class="empty-cart">No items yet 鈥� tap any meal to add it.</div>';btn.disabled=true;return;}
+  if(keys.length===0){lines.innerHTML='<div class="empty-cart">No items yet — tap any meal to add it.</div>';btn.disabled=true;return;}
   let sum=0,html="";
   keys.forEach(k=>{
     const c=cart[k];const sub=c.price*c.qty;sum+=sub;
-    html+=`<div class="cline"><span class="cline-name">${c.name}</span><span class="cline-qty">脳${c.qty}</span><span class="cline-price">MVR ${sub}</span><button class="cline-rm" onclick="rm('${k}')">脳</button></div>`;
+    html+='<div class="cline"><span class="cline-name">'+c.name+'</span><span class="cline-qty">x'+c.qty+'</span><span class="cline-price">MVR '+sub+'</span><button class="cline-rm" onclick="rm(\''+k+'\')">&#x2715;</button></div>';
   });
-  html+=`<div class="total-row"><span>Total</span><span class="total-price">MVR ${sum}</span></div>`;
+  html+='<div class="total-row"><span>Total</span><span class="total-price">MVR '+sum+'</span></div>';
   lines.innerHTML=html;
   btn.disabled=false;
 }
@@ -300,15 +307,15 @@ function rm(key){
   delete cart[key];renderCart();
 }
 
-document.getElementById("tabs").addEventListener("click",e=>{
+document.getElementById("tabs").addEventListener("click",function(e){
   const t=e.target.closest(".tab");if(!t)return;
-  document.querySelectorAll(".tab").forEach(x=>x.classList.remove("on"));
-  document.querySelectorAll(".section").forEach(x=>x.classList.remove("on"));
+  document.querySelectorAll(".tab").forEach(function(x){x.classList.remove("on");});
+  document.querySelectorAll(".section").forEach(function(x){x.classList.remove("on");});
   t.classList.add("on");
   const sec=document.getElementById(t.dataset.sec);if(sec)sec.classList.add("on");
 });
 
-document.getElementById("place-btn").addEventListener("click",async()=>{
+document.getElementById("place-btn").addEventListener("click",async function(){
   const name=document.getElementById("cname").value.trim();
   const phone=document.getElementById("cphone").value.trim();
   const address=document.getElementById("caddress").value.trim();
@@ -316,69 +323,30 @@ document.getElementById("place-btn").addEventListener("click",async()=>{
   const btn=document.getElementById("place-btn");
   if(!name){smsg.style.display="block";smsg.className="smsg err";smsg.textContent="Please enter your name.";return;}
   if(!address){smsg.style.display="block";smsg.className="smsg err";smsg.textContent="Please enter your delivery address.";return;}
-  const orderItems=Object.values(cart).map(c=>({code:c.code,name:c.name,qty:c.qty,unit_price:c.price,subtotal:c.price*c.qty}));
-  const total=orderItems.reduce((s,i)=>s+i.subtotal,0);
+  const orderItems=Object.values(cart).map(function(c){return{code:c.code,name:c.name,qty:c.qty,unit_price:c.price,subtotal:c.price*c.qty};});
+  const total=orderItems.reduce(function(s,i){return s+i.subtotal;},0);
   const payload={restaurant:"Island Fried Chicken",customer_name:name,phone:phone||"Not provided",delivery_address:address,order_time:new Date().toISOString(),items:orderItems,total_mvr:total};
   btn.disabled=true;smsg.style.display="block";smsg.className="smsg wait";smsg.textContent="Sending your order...";
   try{
     const res=await fetch(WEBHOOK,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
     if(res.ok){
-      smsg.className="smsg ok";smsg.textContent="Order placed! We'll deliver to your address shortly. Thank you, "+name+"!";
-      Object.keys(cart).forEach(k=>{
+      smsg.className="smsg ok";smsg.textContent="Order placed! We will deliver to your address shortly. Thank you, "+name+"!";
+      Object.keys(cart).forEach(function(k){
         delete cart[k];
         const qnEl=document.getElementById("qn_"+k);if(qnEl)qnEl.textContent="0";
         const card=document.getElementById("c_"+k);if(card)card.className="card";
       });
-      document.querySelectorAll(".cb-item").forEach(x=>x.classList.remove("sel"));
+      document.querySelectorAll(".cb-item").forEach(function(x){x.classList.remove("sel");});
       renderCart();
       document.getElementById("cname").value="";
       document.getElementById("cphone").value="";
       document.getElementById("caddress").value="";
     }else{throw new Error("Server error "+res.status);}
   }catch(err){
-    smsg.className="smsg err";smsg.textContent="Could not send order 鈥� check your webhook URL. ("+err.message+")";
+    smsg.className="smsg err";smsg.textContent="Could not send order. Please try again. ("+err.message+")";
     btn.disabled=false;
   }
 });
 </script>
-document.getElementById("place-btn").onclick = async () => {
-
-  const name = document.getElementById("cname").value;
-  const phone = document.getElementById("cphone").value;
-  const address = document.getElementById("caddress").value;
-
-  const items = Object.values(cart);
-
-  const payload = {
-    customer_name: name,
-    phone: phone,
-    address: address,
-    items: items,
-    total: items.reduce((t,i)=>t + i.price*i.qty,0)
-  };
-
-  try {
-
-    const res = await fetch(WEBHOOK, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(payload)
-    });
-
-    const data = await res.json();
-
-    document.getElementById("smsg").style.display="block";
-    document.getElementById("smsg").className="smsg ok";
-    document.getElementById("smsg").innerText="Order sent successfully!";
-
-  } catch(err){
-
-    document.getElementById("smsg").style.display="block";
-    document.getElementById("smsg").className="smsg err";
-    document.getElementById("smsg").innerText="Failed to send order.";
-
-  }
-
-};
+</body>
+</html>
