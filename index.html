@@ -42,15 +42,8 @@ html,body{width:100%;max-width:480px;margin:0 auto;font-family:-apple-system,Bli
 .cb-item.sel{border-color:#fff;background:rgba(255,255,255,0.25)}
 .cb-item .cb-code{font-size:10px;opacity:0.65;display:block;margin-bottom:2px;letter-spacing:0.3px;font-weight:400}
 .cb-item .cb-price{font-size:12px;opacity:0.82;display:block;margin-top:2px}
-.cb-name {
-  font-weight: 500;
-  font-size: 14px;
-  margin-top: 4px;
-}
-.cb-label {
-  font-size: 12px;
-  color: rgba(255,255,255,0.8);
-}
+.cb-name{font-weight:500;font-size:14px;margin-top:4px}
+.cb-label{font-size:12px;color:rgba(255,255,255,0.8)}
 .divider{border:none;border-top:0.5px solid rgba(0,0,0,0.1);margin:14px 0}
 .cart-panel{background:#fff;border-top:1px solid rgba(0,0,0,0.12);padding:18px 16px 24px}
 .cart-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:13px}
@@ -253,19 +246,23 @@ const menus = {
   ],
 };
 
-// Buckets with proper item codes and names
 const buckets = [
-  {code: "IFC-BKT4",  name: "IFC Chicken Bucket",  label: "4 Pcs",  price: 100},
-  {code: "IFC-BKT6",  name: "IFC Chicken Bucket",  label: "6 Pcs",  price: 149},
-  {code: "IFC-BKT9",  name: "IFC Chicken Bucket",  label: "9 Pcs",  price: 219},
-  {code: "IFC-BKT12", name: "IFC Chicken Bucket", label: "12 Pcs", price: 259},
+  {code:"IFC-BKT4",  name:"IFC Chicken Bucket", label:"4 Pcs",  price:100},
+  {code:"IFC-BKT6",  name:"IFC Chicken Bucket", label:"6 Pcs",  price:149},
+  {code:"IFC-BKT9",  name:"IFC Chicken Bucket", label:"9 Pcs",  price:219},
+  {code:"IFC-BKT12", name:"IFC Chicken Bucket", label:"12 Pcs", price:259},
 ];
 
 const cart = {};
 
-// Phone validation: starts with 7 or 9, exactly 7 digits
 function validatePhone(phone) {
   return /^[79]\d{6}$/.test(phone);
+}
+
+function showMsg(smsg, type, text) {
+  smsg.className = "smsg " + type;
+  smsg.textContent = text;
+  smsg.style.display = "block";
 }
 
 // Build chicken bucket buttons
@@ -276,18 +273,32 @@ function buildBuckets() {
     const el = document.createElement("div");
     el.className = "cb-item";
     el.id = "bk_" + i;
-    el.innerHTML = `
-      <span class="cb-code">${b.code}</span>
-      <div class="cb-name">${b.name}</div>
-      <div class="cb-label">${b.label}</div>
-      <span class="cb-price">MVR ${b.price}</span>
-    `;
+
+    const codeEl = document.createElement("span");
+    codeEl.className = "cb-code";
+    codeEl.textContent = b.code;
+
+    const nameEl = document.createElement("div");
+    nameEl.className = "cb-name";
+    nameEl.textContent = b.name;
+
+    const labelEl = document.createElement("div");
+    labelEl.className = "cb-label";
+    labelEl.textContent = b.label;
+
+    const priceEl = document.createElement("span");
+    priceEl.className = "cb-price";
+    priceEl.textContent = "MVR " + b.price;
+
+    el.appendChild(codeEl);
+    el.appendChild(nameEl);
+    el.appendChild(labelEl);
+    el.appendChild(priceEl);
+
     el.addEventListener("click", function() {
-      // Clear previous selections
-      Object.keys(cart).filter(k => k.startsWith("bk_")).forEach(k => delete cart[k]);
-      document.querySelectorAll(".cb-item").forEach(x => x.classList.remove("sel"));
-      // Add selected bucket
-      cart["bk_" + i] = {name: b.name, price: b.price, qty: 1, code: b.code};
+      Object.keys(cart).filter(function(k){ return k.startsWith("bk_"); }).forEach(function(k){ delete cart[k]; });
+      document.querySelectorAll(".cb-item").forEach(function(x){ x.classList.remove("sel"); });
+      cart["bk_" + i] = {name: b.name + " " + b.label, price: b.price, qty: 1, code: b.code};
       el.classList.add("sel");
       renderCart();
     });
@@ -295,11 +306,12 @@ function buildBuckets() {
   });
 }
 
-// Build product cards using DOM methods + addEventListener (no inline handlers)
+// Build product cards — all DOM methods, no innerHTML for interactive parts
 function buildCards(gid, items) {
   const g = document.getElementById(gid);
   if (!g) return;
   g.innerHTML = "";
+
   items.forEach(function(item, i) {
     const key = gid + "_" + i;
 
@@ -307,6 +319,7 @@ function buildCards(gid, items) {
     card.className = "card";
     card.id = "c_" + key;
 
+    // Image
     const img = document.createElement("img");
     img.className = "card-img";
     img.src = item.img;
@@ -317,15 +330,38 @@ function buildCards(gid, items) {
       this.nextSibling.style.display = "flex";
     };
 
+    // Placeholder
     const ph = document.createElement("div");
     ph.className = "card-img-ph";
     ph.innerHTML = "&#x1F357;";
 
+    // Body
     const body = document.createElement("div");
     body.className = "card-body";
 
+    const codeDiv = document.createElement("div");
+    codeDiv.className = "card-code";
+    codeDiv.textContent = item.code;
+
+    const nameDiv = document.createElement("div");
+    nameDiv.className = "card-name";
+    nameDiv.textContent = item.name;
+
+    const descDiv = document.createElement("div");
+    descDiv.className = "card-desc";
+    descDiv.textContent = item.desc;
+
+    // Footer with price + qty controls
+    const footer = document.createElement("div");
+    footer.className = "card-footer";
+
+    const priceDiv = document.createElement("div");
+    priceDiv.className = "card-price";
+    priceDiv.textContent = "MVR " + item.price;
+
     const btnMinus = document.createElement("button");
     btnMinus.className = "qb";
+    btnMinus.type = "button";
     btnMinus.innerHTML = "&#x2212;";
     btnMinus.addEventListener("click", function(e) { e.stopPropagation(); chg(key, item, -1); });
 
@@ -336,6 +372,7 @@ function buildCards(gid, items) {
 
     const btnPlus = document.createElement("button");
     btnPlus.className = "qb";
+    btnPlus.type = "button";
     btnPlus.innerHTML = "&#x2B;";
     btnPlus.addEventListener("click", function(e) { e.stopPropagation(); chg(key, item, 1); });
 
@@ -345,19 +382,13 @@ function buildCards(gid, items) {
     qtyRow.appendChild(qnSpan);
     qtyRow.appendChild(btnPlus);
 
-    const priceDiv = document.createElement("div");
-    priceDiv.className = "card-price";
-    priceDiv.textContent = "MVR " + item.price;
-
-    const footer = document.createElement("div");
-    footer.className = "card-footer";
     footer.appendChild(priceDiv);
     footer.appendChild(qtyRow);
 
-    body.innerHTML =
-      '<div class="card-code">' + item.code + '</div>' +
-      '<div class="card-name">' + item.name + '</div>' +
-      '<div class="card-desc">' + item.desc + '</div>';
+    // ✅ FIX: append children in order — no innerHTML after appendChild
+    body.appendChild(codeDiv);
+    body.appendChild(nameDiv);
+    body.appendChild(descDiv);
     body.appendChild(footer);
 
     card.appendChild(img);
@@ -380,7 +411,7 @@ function chg(key, item, delta) {
   if (newQty === 0) {
     delete cart[key];
   } else {
-    cart[key] = {name:item.name, price:item.price, qty:newQty, code:item.code};
+    cart[key] = {name: item.name, price: item.price, qty: newQty, code: item.code};
   }
   const qnEl = document.getElementById("qn_" + key);
   if (qnEl) qnEl.textContent = newQty;
@@ -414,15 +445,28 @@ function renderCart() {
 
     const line = document.createElement("div");
     line.className = "cline";
-    line.innerHTML =
-      '<span class="cline-name">'  + c.name + '</span>' +
-      '<span class="cline-qty">x'  + c.qty  + '</span>' +
-      '<span class="cline-price">MVR ' + sub + '</span>';
+
+    const nameSpan = document.createElement("span");
+    nameSpan.className = "cline-name";
+    nameSpan.textContent = c.name;
+
+    const qtySpan = document.createElement("span");
+    qtySpan.className = "cline-qty";
+    qtySpan.textContent = "x" + c.qty;
+
+    const priceSpan = document.createElement("span");
+    priceSpan.className = "cline-price";
+    priceSpan.textContent = "MVR " + sub;
 
     const rmBtn = document.createElement("button");
     rmBtn.className = "cline-rm";
+    rmBtn.type = "button";
     rmBtn.innerHTML = "&#x2715;";
     rmBtn.addEventListener("click", function() { rm(k); });
+
+    line.appendChild(nameSpan);
+    line.appendChild(qtySpan);
+    line.appendChild(priceSpan);
     line.appendChild(rmBtn);
     lines.appendChild(line);
   });
@@ -470,27 +514,16 @@ document.getElementById("place-btn").addEventListener("click", async function() 
   const smsg    = document.getElementById("smsg");
   const btn     = document.getElementById("place-btn");
 
+  // ✅ FIX: hide message first, then validate and show red errors
   smsg.style.display = "none";
 
-  if (!name) {
-    smsg.style.display="block"; smsg.className="smsg err";
-    smsg.textContent="Please enter your name."; return;
-  }
-  if (!phone || !validatePhone(phone)) {
-    smsg.style.display="block"; smsg.className="smsg err";
-    smsg.textContent="Enter a valid phone number (7 digits, starting with 7 or 9)."; return;
-  }
-  if (!address) {
-    smsg.style.display="block"; smsg.className="smsg err";
-    smsg.textContent="Please enter your delivery address."; return;
-  }
-  if (Object.keys(cart).length === 0) {
-    smsg.style.display="block"; smsg.className="smsg err";
-    smsg.textContent="Your cart is empty."; return;
-  }
+  if (!name) { showMsg(smsg, "err", "Please enter your name."); return; }
+  if (!phone || !validatePhone(phone)) { showMsg(smsg, "err", "Enter a valid phone number (7 digits, starting with 7 or 9)."); return; }
+  if (!address) { showMsg(smsg, "err", "Please enter your delivery address."); return; }
+  if (Object.keys(cart).length === 0) { showMsg(smsg, "err", "Your cart is empty."); return; }
 
   const orderItems = Object.values(cart).map(function(c) {
-    return {code:c.code, name:c.name, qty:c.qty, unit_price:c.price, subtotal:c.price * c.qty};
+    return {code: c.code, name: c.name, qty: c.qty, unit_price: c.price, subtotal: c.price * c.qty};
   });
   const total = orderItems.reduce(function(s, i){ return s + i.subtotal; }, 0);
   const payload = {
@@ -506,7 +539,7 @@ document.getElementById("place-btn").addEventListener("click", async function() 
   console.log("Payload:", JSON.stringify(payload, null, 2));
 
   btn.disabled = true;
-  smsg.style.display = "block"; smsg.className = "smsg wait"; smsg.textContent = "Sending your order...";
+  showMsg(smsg, "wait", "Sending your order...");
 
   try {
     const res  = await fetch(WEBHOOK, {
@@ -520,9 +553,9 @@ document.getElementById("place-btn").addEventListener("click", async function() 
     let data = {};
     try { data = JSON.parse(text); } catch(e) {}
 
-    if (res.ok) {
-      smsg.className = "smsg ok";
-      smsg.textContent = data.message || "Order placed! We'll deliver to your address shortly.";
+    // ✅ FIX: check data.status explicitly — n8n may return 200 with a non-success status field
+    if (res.ok && data.status !== "error") {
+      showMsg(smsg, "ok", data.message || "Order placed! We'll deliver to your address shortly.");
       Object.keys(cart).forEach(function(k) {
         const qnEl   = document.getElementById("qn_" + k); if (qnEl) qnEl.textContent = "0";
         const cardEl = document.getElementById(k.startsWith("bk_") ? k : "c_" + k);
@@ -535,14 +568,12 @@ document.getElementById("place-btn").addEventListener("click", async function() 
       document.getElementById("cphone").value   = "";
       document.getElementById("caddress").value = "";
     } else {
-      smsg.className = "smsg err";
-      smsg.textContent = data.message || ("Server error: " + res.status);
+      showMsg(smsg, "err", data.message || ("Server error: " + res.status));
       btn.disabled = false;
     }
   } catch(err) {
     console.error("Fetch error:", err);
-    smsg.className = "smsg err";
-    smsg.textContent = err.message;
+    showMsg(smsg, "err", err.message);
     btn.disabled = false;
   }
 });
