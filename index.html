@@ -423,6 +423,7 @@ document.getElementById("place-btn").addEventListener("click", async function(){
   };
 
   console.log("Sending payload:", payload);
+  console.log("Payload JSON:", JSON.stringify(payload));
 
   btn.disabled = true;
   smsg.style.display="block"; smsg.className="smsg wait"; smsg.textContent="Sending your order...";
@@ -433,10 +434,14 @@ document.getElementById("place-btn").addEventListener("click", async function(){
       headers:{"Content-Type":"application/json"},
       body:JSON.stringify(payload)
     });
-    const data = await res.json();
 
-    if(data.status === "success"){
-      smsg.className="smsg ok"; smsg.textContent = data.message || "Order sent successfully!";
+    // Handle non-JSON or empty responses from n8n gracefully
+    const text = await res.text();
+    let data = {};
+    try { data = JSON.parse(text); } catch(e) { console.warn("Non-JSON response:", text); }
+
+    if(res.ok && (data.status === "success" || !data.status)){
+      smsg.className="smsg ok"; smsg.textContent = data.message || "Order placed! We'll deliver to your address shortly.";
 
       // Clear cart & form
       Object.keys(cart).forEach(k => {
