@@ -126,7 +126,7 @@ html,body{width:100%;max-width:480px;margin:0 auto;font-family:-apple-system,Bli
 </div>
 
 <script>
-const WEBHOOK="https://kurama7417.app.n8n.cloud/webhook-test/b407ab0c-1f56-4c81-980e-a11ac259c1ef";
+const WEBHOOK="https://kurama7417.app.n8n.cloud/webhook/b407ab0c-1f56-4c81-980e-a11ac259c1ef";
 const IMGS={
   individual:"https://images.unsplash.com/photo-1626645738196-c2a7c87a8f58?w=400&q=80&auto=format&fit=crop",
   budget:"https://images.unsplash.com/photo-1561758033-d89a9ad46330?w=400&q=80&auto=format&fit=crop",
@@ -422,43 +422,22 @@ document.getElementById("place-btn").addEventListener("click", async function(){
     total_mvr: total
   };
 
-  console.log("Sending payload:", payload);
-  console.log("Payload JSON:", JSON.stringify(payload));
-
   btn.disabled = true;
   smsg.style.display="block"; smsg.className="smsg wait"; smsg.textContent="Sending your order...";
 
   try{
+    const res = await fetch(WEBHOOK, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+
+    const text = await res.text();
     let data = {};
-    let requestOk = false;
+    try { data = JSON.parse(text); } catch(e) { console.warn("Non-JSON response:", text); }
 
-    try {
-      // First attempt: standard fetch (works when n8n CORS is configured)
-      const res = await fetch(WEBHOOK, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
-      });
-      const text = await res.text();
-      try { data = JSON.parse(text); } catch(e) { console.warn("Non-JSON response:", text); }
-      requestOk = res.ok;
-    } catch(corsErr) {
-      console.warn("Standard fetch failed, trying no-cors mode:", corsErr.message);
-      // Fallback: no-cors mode — request goes through but response is opaque (unreadable)
-      // We assume success if it doesn't throw
-      await fetch(WEBHOOK, {
-        method: "POST",
-        mode: "no-cors",
-        headers: { "Content-Type": "text/plain" },
-        body: JSON.stringify(payload)
-      });
-      requestOk = true; // assume sent
-    }
-
-    if(requestOk && (data.status === "success" || !data.status)){
+    if(res.ok && (data.status === "success" || !data.status)){
       smsg.className="smsg ok"; smsg.textContent = data.message || "Order placed! We'll deliver to your address shortly.";
-
-      // Clear cart & form
       Object.keys(cart).forEach(k => {
         const qnEl = document.getElementById("qn_" + k); if(qnEl) qnEl.textContent="0";
         const cardEl = document.getElementById(k.startsWith("bk_") ? k : "c_" + k);
