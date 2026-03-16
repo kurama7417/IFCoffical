@@ -40,7 +40,8 @@ html,body{width:100%;max-width:480px;margin:0 auto;font-family:-apple-system,Bli
 .cb-item{background:rgba(255,255,255,0.15);border-radius:9px;padding:10px 12px;font-size:14px;font-weight:500;cursor:pointer;border:1.5px solid transparent;transition:background 0.12s;touch-action:manipulation}
 .cb-item:active{background:rgba(255,255,255,0.3)}
 .cb-item.sel{border-color:#fff;background:rgba(255,255,255,0.25)}
-.cb-item span{font-size:12px;opacity:0.82;display:block;margin-top:2px}
+.cb-item .cb-code{font-size:10px;opacity:0.65;display:block;margin-bottom:2px;letter-spacing:0.3px;font-weight:400}
+.cb-item .cb-price{font-size:12px;opacity:0.82;display:block;margin-top:2px}
 .divider{border:none;border-top:0.5px solid rgba(0,0,0,0.1);margin:14px 0}
 .cart-panel{background:#fff;border-top:1px solid rgba(0,0,0,0.12);padding:18px 16px 24px}
 .cart-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:13px}
@@ -127,335 +128,408 @@ html,body{width:100%;max-width:480px;margin:0 auto;font-family:-apple-system,Bli
 
 <script>
 // Switch to /webhook/ (remove "-test") once your workflow is activated in n8n
-const WEBHOOK="https://kurama7417.app.n8n.cloud/webhook-test/367e61e9-bc0b-4a82-9964-bcf208bbf511";
-const IMGS={
-  individual:"https://images.unsplash.com/photo-1626645738196-c2a7c87a8f58?w=400&q=80&auto=format&fit=crop",
-  budget:"https://images.unsplash.com/photo-1561758033-d89a9ad46330?w=400&q=80&auto=format&fit=crop",
-  ricemeal:"https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=400&q=80&auto=format&fit=crop",
-  lunch:"https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?w=400&q=80&auto=format&fit=crop",
-  kids:"https://images.unsplash.com/photo-1592415486689-125cbbfcdfed?w=400&q=80&auto=format&fit=crop",
-  family:"https://images.unsplash.com/photo-1569058242567-93de6f36f8eb?w=400&q=80&auto=format&fit=crop",
-  chicken:"https://images.unsplash.com/photo-1567620832903-9fc6debc209f?w=400&q=80&auto=format&fit=crop",
-  strips:"https://images.unsplash.com/photo-1562967914-608f82629710?w=400&q=80&auto=format&fit=crop",
-  fries:"https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=400&q=80&auto=format&fit=crop",
-  nuggets:"https://images.unsplash.com/photo-1619881589316-1a4ef1c91b78?w=400&q=80&auto=format&fit=crop",
-  wrap:"https://images.unsplash.com/photo-1598515214211-89d3c73ae83b?w=400&q=80&auto=format&fit=crop",
-  burger:"https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&q=80&auto=format&fit=crop",
-  sub:"https://images.unsplash.com/photo-1509722747041-616f39b57569?w=400&q=80&auto=format&fit=crop",
-  pizza:"https://images.unsplash.com/photo-1513104890138-7c749659a591?w=400&q=80&auto=format&fit=crop",
-  conepizza:"https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=400&q=80&auto=format&fit=crop",
-  waffle:"https://images.unsplash.com/photo-1484723091739-30a097e8f929?w=400&q=80&auto=format&fit=crop",
-  coke:"https://images.unsplash.com/photo-1554866585-cd94860890b7?w=400&q=80&auto=format&fit=crop",
+const WEBHOOK = "https://kurama7417.app.n8n.cloud/webhook-test/367e61e9-bc0b-4a82-9964-bcf208bbf511";
+
+const IMGS = {
+  individual: "https://images.unsplash.com/photo-1626645738196-c2a7c87a8f58?w=400&q=80&auto=format&fit=crop",
+  budget:     "https://images.unsplash.com/photo-1561758033-d89a9ad46330?w=400&q=80&auto=format&fit=crop",
+  ricemeal:   "https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=400&q=80&auto=format&fit=crop",
+  lunch:      "https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?w=400&q=80&auto=format&fit=crop",
+  kids:       "https://images.unsplash.com/photo-1592415486689-125cbbfcdfed?w=400&q=80&auto=format&fit=crop",
+  family:     "https://images.unsplash.com/photo-1569058242567-93de6f36f8eb?w=400&q=80&auto=format&fit=crop",
+  chicken:    "https://images.unsplash.com/photo-1567620832903-9fc6debc209f?w=400&q=80&auto=format&fit=crop",
+  strips:     "https://images.unsplash.com/photo-1562967914-608f82629710?w=400&q=80&auto=format&fit=crop",
+  fries:      "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=400&q=80&auto=format&fit=crop",
+  nuggets:    "https://images.unsplash.com/photo-1619881589316-1a4ef1c91b78?w=400&q=80&auto=format&fit=crop",
+  wrap:       "https://images.unsplash.com/photo-1598515214211-89d3c73ae83b?w=400&q=80&auto=format&fit=crop",
+  burger:     "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&q=80&auto=format&fit=crop",
+  sub:        "https://images.unsplash.com/photo-1509722747041-616f39b57569?w=400&q=80&auto=format&fit=crop",
+  pizza:      "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=400&q=80&auto=format&fit=crop",
+  conepizza:  "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=400&q=80&auto=format&fit=crop",
+  waffle:     "https://images.unsplash.com/photo-1484723091739-30a097e8f929?w=400&q=80&auto=format&fit=crop",
+  coke:       "https://images.unsplash.com/photo-1554866585-cd94860890b7?w=400&q=80&auto=format&fit=crop",
 };
-const menus={
-  individual:[
-    {code:"IFC A1",name:"Individual Meal A1",desc:"1 Pc Chicken, 1 Pc Strips, 1 Pc Fries",price:96,img:IMGS.individual},
-    {code:"IFC A2",name:"Individual Meal A2",desc:"1 Pc Chicken, 3 Pcs Strips, Fries (S)",price:98,img:IMGS.chicken},
-    {code:"IFC A3",name:"Individual Meal A3",desc:"4 Pcs Chicken, 1 Pc Strips, Fries (S)",price:96,img:IMGS.chicken},
-    {code:"IFC A4",name:"Individual Meal A4",desc:"2 Pcs Chicken, 4 Pcs Wings, Fries (M)",price:122,img:IMGS.individual},
+
+const menus = {
+  individual: [
+    {code:"IFC A1", name:"Individual Meal A1", desc:"1 Pc Chicken, 1 Pc Strips, 1 Pc Fries",       price:96,  img:IMGS.individual},
+    {code:"IFC A2", name:"Individual Meal A2", desc:"1 Pc Chicken, 3 Pcs Strips, Fries (S)",        price:98,  img:IMGS.chicken},
+    {code:"IFC A3", name:"Individual Meal A3", desc:"4 Pcs Chicken, 1 Pc Strips, Fries (S)",        price:96,  img:IMGS.chicken},
+    {code:"IFC A4", name:"Individual Meal A4", desc:"2 Pcs Chicken, 4 Pcs Wings, Fries (M)",        price:122, img:IMGS.individual},
   ],
-  budget:[
-    {code:"IFC B1",name:"Budget Meal B1",desc:"1 IFC Wing, Chickpop (8), Fries (S), 1 Cone",price:123,img:IMGS.budget},
-    {code:"IFC B2",name:"Budget Meal B2",desc:"1 IFC Burger, 2 Pcs Chicken, Fries (M)",price:122,img:IMGS.burger},
-    {code:"IFC B3",name:"Budget Meal B3",desc:"2 Pcs Chicken, Chickpop (8), Fries (S), 1 Cone",price:103,img:IMGS.budget},
-    {code:"IFC B4",name:"Budget Meal B4",desc:"3 Pcs Chicken, 4 Pcs Strips, Fries (M)",price:212,img:IMGS.chicken},
+  budget: [
+    {code:"IFC B1", name:"Budget Meal B1", desc:"1 IFC Wing, Chickpop (8), Fries (S), 1 Cone",     price:123, img:IMGS.budget},
+    {code:"IFC B2", name:"Budget Meal B2", desc:"1 IFC Burger, 2 Pcs Chicken, Fries (M)",           price:122, img:IMGS.burger},
+    {code:"IFC B3", name:"Budget Meal B3", desc:"2 Pcs Chicken, Chickpop (8), Fries (S), 1 Cone",  price:103, img:IMGS.budget},
+    {code:"IFC B4", name:"Budget Meal B4", desc:"3 Pcs Chicken, 4 Pcs Strips, Fries (M)",          price:212, img:IMGS.chicken},
   ],
-  lunch:[
-    {code:"IFC F1",name:"Lunch Meal F1",desc:"Chicken Rice & Rice",price:69,img:IMGS.ricemeal},
-    {code:"IFC F2",name:"Lunch Meal F2",desc:"1/2 Chicken Rice, Rice & 1 Coke",price:69,img:IMGS.ricemeal},
-    {code:"IFC F3",name:"Lunch Meal F3",desc:"3 Pcs Chicken Rice, Rice & 1 Coke",price:69,img:IMGS.ricemeal},
-    {code:"IFC F4",name:"Lunch Meal F4",desc:"Fried Grilled Rice & 1 Coke",price:89,img:IMGS.ricemeal},
-    {code:"IFC F5",name:"Lunch Meal F5",desc:"Chicken Fried Rice",price:75,img:IMGS.ricemeal},
-    {code:"IFC F6",name:"IFC Nasi Goreng",desc:"Special Nasi Goreng",price:80,img:IMGS.lunch},
-    {code:"IFC F7",name:"IFC Tuna Rice",desc:"Tuna Rice special meal",price:65,img:IMGS.lunch},
+  lunch: [
+    {code:"IFC F1", name:"Lunch Meal F1",   desc:"Chicken Rice & Rice",                price:69, img:IMGS.ricemeal},
+    {code:"IFC F2", name:"Lunch Meal F2",   desc:"1/2 Chicken Rice, Rice & 1 Coke",   price:69, img:IMGS.ricemeal},
+    {code:"IFC F3", name:"Lunch Meal F3",   desc:"3 Pcs Chicken Rice, Rice & 1 Coke", price:69, img:IMGS.ricemeal},
+    {code:"IFC F4", name:"Lunch Meal F4",   desc:"Fried Grilled Rice & 1 Coke",       price:89, img:IMGS.ricemeal},
+    {code:"IFC F5", name:"Lunch Meal F5",   desc:"Chicken Fried Rice",                price:75, img:IMGS.ricemeal},
+    {code:"IFC F6", name:"IFC Nasi Goreng", desc:"Special Nasi Goreng",               price:80, img:IMGS.lunch},
+    {code:"IFC F7", name:"IFC Tuna Rice",   desc:"Tuna Rice special meal",            price:65, img:IMGS.lunch},
   ],
-  kids:[
-    {code:"IFC G1",name:"Kids Meal G1",desc:"2 Pcs Strips + Milkshake (S)",price:69,img:IMGS.strips},
-    {code:"IFC G2",name:"Kids Meal G2",desc:"1 Pc Chicken + Milkshake (S)",price:69,img:IMGS.kids},
-    {code:"IFC G3",name:"Kids Meal G3",desc:"2 Pcs Strips + Fries (S)",price:69,img:IMGS.strips},
-    {code:"IFC G4",name:"Kids Meal G4",desc:"1 Pc Chicken, Fries (S) & 1 Coke",price:69,img:IMGS.kids},
+  kids: [
+    {code:"IFC G1", name:"Kids Meal G1", desc:"2 Pcs Strips + Milkshake (S)",      price:69, img:IMGS.strips},
+    {code:"IFC G2", name:"Kids Meal G2", desc:"1 Pc Chicken + Milkshake (S)",      price:69, img:IMGS.kids},
+    {code:"IFC G3", name:"Kids Meal G3", desc:"2 Pcs Strips + Fries (S)",          price:69, img:IMGS.strips},
+    {code:"IFC G4", name:"Kids Meal G4", desc:"1 Pc Chicken, Fries (S) & 1 Coke", price:69, img:IMGS.kids},
   ],
-  family:[
-    {code:"IFC K1",name:"Family Meal A",desc:"1 Chicken, 8 Pcs Strips, 3 Large Sides & 3 Coke 600ml",price:349,img:IMGS.family},
-    {code:"IFC K2",name:"Family Meal B",desc:"12 Pcs Chicken, 8 Strips, 3 Crispy Burgers, Chickpop 20",price:449,img:IMGS.family},
-    {code:"IFC K3",name:"Family Meal K3",desc:"Tandoori family pack",price:130,img:IMGS.pizza},
-    {code:"IFC K4",name:"Family Meal K4",desc:"Chicken & Mushroom family",price:125,img:IMGS.pizza},
-    {code:"IFC K5",name:"Family Meal K5",desc:"BBQ Beef Pepperoni family",price:130,img:IMGS.pizza},
-    {code:"IFC K7",name:"IFC K7 Sausage",desc:"Sausage family meal",price:0,img:IMGS.family},
-    {code:"IFC K8",name:"IFC K8 Crispy",desc:"Crispy family meal",price:0,img:IMGS.chicken},
+  family: [
+    {code:"IFC K1", name:"Family Meal A",   desc:"1 Chicken, 8 Pcs Strips, 3 Large Sides & 3 Coke 600ml",   price:349, img:IMGS.family},
+    {code:"IFC K2", name:"Family Meal B",   desc:"12 Pcs Chicken, 8 Strips, 3 Crispy Burgers, Chickpop 20", price:449, img:IMGS.family},
+    {code:"IFC K3", name:"Family Meal K3",  desc:"Tandoori family pack",                                     price:130, img:IMGS.pizza},
+    {code:"IFC K4", name:"Family Meal K4",  desc:"Chicken & Mushroom family",                                price:125, img:IMGS.pizza},
+    {code:"IFC K5", name:"Family Meal K5",  desc:"BBQ Beef Pepperoni family",                                price:130, img:IMGS.pizza},
+    {code:"IFC K6", name:"IFC K6 Sausage",  desc:"Sausage family meal",                                     price:0,   img:IMGS.family},
+    {code:"IFC K7", name:"IFC K7 Crispy",   desc:"Crispy family meal",                                      price:0,   img:IMGS.chicken},
   ],
-  delicious:[
-    {code:"IFC Del",name:"Chicken Strips 5 Pcs",desc:"5 golden crispy chicken strips",price:65,img:IMGS.strips},
-    {code:"IFC Del",name:"Chicken Strips 10 Pcs",desc:"10 golden crispy chicken strips",price:100,img:IMGS.strips},
+  delicious: [
+    {code:"IFC Del1", name:"Chicken Strips 5 Pcs",  desc:"5 golden crispy chicken strips",  price:65,  img:IMGS.strips},
+    {code:"IFC Del2", name:"Chicken Strips 10 Pcs", desc:"10 golden crispy chicken strips", price:100, img:IMGS.strips},
   ],
-  sides:[
-    {code:"Side",name:"Chicken Nuggets 5 Pcs",desc:"5 golden nuggets",price:50,img:IMGS.nuggets},
-    {code:"Side",name:"Chicken 1 Pc",desc:"1 piece crispy chicken",price:36,img:IMGS.chicken},
-    {code:"Side",name:"Chicken 2 Pcs",desc:"2 pieces crispy chicken",price:50,img:IMGS.chicken},
-    {code:"Side",name:"Chickpop 20",desc:"20 pcs chickpop bites",price:30,img:IMGS.nuggets},
-    {code:"Side",name:"Fries (S)",desc:"Small crispy fries",price:20,img:IMGS.fries},
-    {code:"Side",name:"Fries (M)",desc:"Medium crispy fries",price:30,img:IMGS.fries},
-    {code:"Side",name:"Chickpop (S)",desc:"Small chickpop",price:20,img:IMGS.nuggets},
-    {code:"Side",name:"Chickpop (M)",desc:"Medium chickpop",price:25,img:IMGS.nuggets},
+  sides: [
+    {code:"Side1", name:"Chicken Nuggets 5 Pcs", desc:"5 golden nuggets",        price:50, img:IMGS.nuggets},
+    {code:"Side2", name:"Chicken 1 Pc",          desc:"1 piece crispy chicken",  price:36, img:IMGS.chicken},
+    {code:"Side3", name:"Chicken 2 Pcs",         desc:"2 pieces crispy chicken", price:50, img:IMGS.chicken},
+    {code:"Side4", name:"Chickpop 20",           desc:"20 pcs chickpop bites",   price:30, img:IMGS.nuggets},
+    {code:"Side5", name:"Fries (S)",             desc:"Small crispy fries",      price:20, img:IMGS.fries},
+    {code:"Side6", name:"Fries (M)",             desc:"Medium crispy fries",     price:30, img:IMGS.fries},
+    {code:"Side7", name:"Chickpop (S)",          desc:"Small chickpop",          price:20, img:IMGS.nuggets},
+    {code:"Side8", name:"Chickpop (M)",          desc:"Medium chickpop",         price:25, img:IMGS.nuggets},
   ],
-  wraps:[
-    {code:"IFC C1",name:"Grilled Wrap",desc:"Grilled chicken wrap",price:59,img:IMGS.wrap},
-    {code:"IFC C2",name:"Tuna Wrap",desc:"Tuna wrap special",price:59,img:IMGS.wrap},
-    {code:"IFC C3",name:"Crispy Wrap",desc:"Crispy chicken wrap",price:59,img:IMGS.wrap},
-    {code:"IFC C4",name:"Texas Wrap",desc:"Texas style wrap",price:59,img:IMGS.wrap},
+  wraps: [
+    {code:"IFC C1", name:"Grilled Wrap", desc:"Grilled chicken wrap", price:59, img:IMGS.wrap},
+    {code:"IFC C2", name:"Tuna Wrap",    desc:"Tuna wrap special",    price:59, img:IMGS.wrap},
+    {code:"IFC C3", name:"Crispy Wrap",  desc:"Crispy chicken wrap",  price:59, img:IMGS.wrap},
+    {code:"IFC C4", name:"Texas Wrap",   desc:"Texas style wrap",     price:59, img:IMGS.wrap},
   ],
-  burgers:[
-    {code:"IFC D1",name:"Crispy Burger",desc:"Classic crispy chicken burger",price:65,img:IMGS.burger},
-    {code:"IFC D2",name:"Tandoori Burger",desc:"Tandoori spiced burger",price:65,img:IMGS.burger},
-    {code:"IFC D3",name:"C.W. Burger",desc:"Chicken & Waffle burger",price:65,img:IMGS.burger},
-    {code:"IFC D4",name:"Beef Burger",desc:"100% beef patty burger",price:75,img:IMGS.burger},
-    {code:"IFC E1",name:"Mini Sub - Toasted + Cheese",desc:"Toasted mini sub with cheese",price:69,img:IMGS.sub},
-    {code:"IFC E2",name:"Mini Sub - Crispy",desc:"Crispy chicken mini sub",price:69,img:IMGS.sub},
-    {code:"IFC E3",name:"Mini Sub - Deli",desc:"Deli style mini sub",price:69,img:IMGS.sub},
+  burgers: [
+    {code:"IFC D1", name:"Crispy Burger",              desc:"Classic crispy chicken burger",  price:65, img:IMGS.burger},
+    {code:"IFC D2", name:"Tandoori Burger",            desc:"Tandoori spiced burger",         price:65, img:IMGS.burger},
+    {code:"IFC D3", name:"C.W. Burger",                desc:"Chicken & Waffle burger",        price:65, img:IMGS.burger},
+    {code:"IFC D4", name:"Beef Burger",                desc:"100% beef patty burger",         price:75, img:IMGS.burger},
+    {code:"IFC E1", name:"Mini Sub - Toasted + Cheese",desc:"Toasted mini sub with cheese",  price:69, img:IMGS.sub},
+    {code:"IFC E2", name:"Mini Sub - Crispy",          desc:"Crispy chicken mini sub",        price:69, img:IMGS.sub},
+    {code:"IFC E3", name:"Mini Sub - Deli",            desc:"Deli style mini sub",            price:69, img:IMGS.sub},
   ],
-  pizza:[
-    {code:"IFC K1",name:"Kids Special Pizza",desc:"L: MVR 110 / M: MVR 59",price:110,img:IMGS.pizza},
-    {code:"IFC K2",name:"Cheesy Chilli Pizza",desc:"L: MVR 120 / M: MVR 59",price:120,img:IMGS.pizza},
-    {code:"IFC K3",name:"BBQ Pizza",desc:"L: MVR 130 / M: MVR 59",price:130,img:IMGS.pizza},
-    {code:"IFC K4",name:"Tandoori Pizza",desc:"L: MVR 130 / M: MVR 59",price:130,img:IMGS.pizza},
-    {code:"IFC K5",name:"Chicken & Mushroom Pizza",desc:"L: MVR 100 / M: MVR 59",price:100,img:IMGS.pizza},
-    {code:"IFC K6",name:"BBQ Beef Pepperoni Pizza",desc:"L: MVR 125 / M: MVR 59",price:125,img:IMGS.pizza},
+  pizza: [
+    {code:"IFC P1", name:"Kids Special Pizza",       desc:"L: MVR 110 / M: MVR 59", price:110, img:IMGS.pizza},
+    {code:"IFC P2", name:"Cheesy Chilli Pizza",      desc:"L: MVR 120 / M: MVR 59", price:120, img:IMGS.pizza},
+    {code:"IFC P3", name:"BBQ Pizza",                desc:"L: MVR 130 / M: MVR 59", price:130, img:IMGS.pizza},
+    {code:"IFC P4", name:"Tandoori Pizza",           desc:"L: MVR 130 / M: MVR 59", price:130, img:IMGS.pizza},
+    {code:"IFC P5", name:"Chicken & Mushroom Pizza", desc:"L: MVR 100 / M: MVR 59", price:100, img:IMGS.pizza},
+    {code:"IFC P6", name:"BBQ Beef Pepperoni Pizza", desc:"L: MVR 125 / M: MVR 59", price:125, img:IMGS.pizza},
   ],
-  conepizza:[
-    {code:"IFC J1",name:"Cone Pizza - Medium",desc:"Classic medium cone pizza",price:39,img:IMGS.conepizza},
-    {code:"IFC J2",name:"Cone Pizza - Crispy",desc:"Crispy cone pizza",price:39,img:IMGS.conepizza},
-    {code:"IFC J3",name:"Cone Pizza - BBQ",desc:"BBQ flavour cone pizza",price:39,img:IMGS.conepizza},
-    {code:"IFC J4",name:"Cone Pizza - Classic",desc:"Classic cone pizza",price:39,img:IMGS.conepizza},
+  conepizza: [
+    {code:"IFC J1", name:"Cone Pizza - Medium",  desc:"Classic medium cone pizza", price:39, img:IMGS.conepizza},
+    {code:"IFC J2", name:"Cone Pizza - Crispy",  desc:"Crispy cone pizza",         price:39, img:IMGS.conepizza},
+    {code:"IFC J3", name:"Cone Pizza - BBQ",     desc:"BBQ flavour cone pizza",    price:39, img:IMGS.conepizza},
+    {code:"IFC J4", name:"Cone Pizza - Classic", desc:"Classic cone pizza",        price:39, img:IMGS.conepizza},
   ],
-  otg:[
-    {code:"IFC H1",name:"Chicken Waffle",desc:"Crispy chicken waffle on the go",price:35,img:IMGS.waffle},
-    {code:"IFC H2",name:"Spring Potato",desc:"Crispy spring potato",price:35,img:IMGS.fries},
-    {code:"IFC H3",name:"Bubble Waffles",desc:"Nutella / Strawberry / Chocolate",price:45,img:IMGS.waffle},
-    {code:"IFC H4",name:"Lollipop Waffle",desc:"Fun lollipop waffle treat",price:35,img:IMGS.waffle},
+  otg: [
+    {code:"IFC H1", name:"Chicken Waffle",  desc:"Crispy chicken waffle on the go",  price:35, img:IMGS.waffle},
+    {code:"IFC H2", name:"Spring Potato",   desc:"Crispy spring potato",             price:35, img:IMGS.fries},
+    {code:"IFC H3", name:"Bubble Waffles",  desc:"Nutella / Strawberry / Chocolate", price:45, img:IMGS.waffle},
+    {code:"IFC H4", name:"Lollipop Waffle", desc:"Fun lollipop waffle treat",        price:35, img:IMGS.waffle},
   ],
-  drinks:[
-    {code:"Drink",name:"Coke 330ml",desc:"330ml chilled can",price:18,img:IMGS.coke},
-    {code:"Drink",name:"Coke 600ml",desc:"600ml chilled bottle",price:25,img:IMGS.coke},
-    {code:"Drink",name:"Water 500ml",desc:"Still water 500ml",price:10,img:IMGS.coke},
-    {code:"Drink",name:"Water 1L",desc:"Still water 1 litre",price:15,img:IMGS.coke},
-  ]
+  drinks: [
+    {code:"Drink1", name:"Coke 330ml",  desc:"330ml chilled can",    price:18, img:IMGS.coke},
+    {code:"Drink2", name:"Coke 600ml",  desc:"600ml chilled bottle", price:25, img:IMGS.coke},
+    {code:"Drink3", name:"Water 500ml", desc:"Still water 500ml",    price:10, img:IMGS.coke},
+    {code:"Drink4", name:"Water 1L",    desc:"Still water 1 litre",  price:15, img:IMGS.coke},
+  ],
 };
-const buckets=[{label:"4 Pcs",price:100},{label:"6 Pcs",price:149},{label:"9 Pcs",price:219},{label:"12 Pcs",price:259}];
+
+// Buckets with proper item codes
+const buckets = [
+  {code:"IFC-BKT4",  label:"4 Pcs",  price:100},
+  {code:"IFC-BKT6",  label:"6 Pcs",  price:149},
+  {code:"IFC-BKT9",  label:"9 Pcs",  price:219},
+  {code:"IFC-BKT12", label:"12 Pcs", price:259},
+];
+
 const cart = {};
 
-// Phone validation: starts with 7 or 9, exactly 7 digits, numeric
-function validatePhone(phone){
+// Phone validation: starts with 7 or 9, exactly 7 digits
+function validatePhone(phone) {
   return /^[79]\d{6}$/.test(phone);
 }
 
-// Build chicken buckets
-function buildBuckets(){
+// Build chicken bucket buttons
+function buildBuckets() {
   const g = document.getElementById("bucket-grid");
   g.innerHTML = "";
-  buckets.forEach((b, i) => {
+  buckets.forEach(function(b, i) {
     const el = document.createElement("div");
-    el.className = "cb-item"; el.id = "bk_" + i;
-    el.innerHTML = b.label + '<span>MVR ' + b.price + '</span>';
-    el.onclick = () => {
-      // Remove any existing bucket selections
-      Object.keys(cart).filter(k => k.startsWith("bk_")).forEach(k => delete cart[k]);
-      document.querySelectorAll(".cb-item").forEach(x => x.classList.remove("sel"));
-      // Add selected bucket to cart
-      cart["bk_" + i] = {
-        name: "IFC Chicken " + b.label,
-        price: b.price,
-        qty: 1,
-        code: "Chicken " + b.label
-      };
+    el.className = "cb-item";
+    el.id = "bk_" + i;
+    el.innerHTML =
+      '<span class="cb-code">' + b.code + '</span>' +
+      b.label +
+      '<span class="cb-price">MVR ' + b.price + '</span>';
+    el.addEventListener("click", function() {
+      Object.keys(cart).filter(function(k){ return k.startsWith("bk_"); }).forEach(function(k){ delete cart[k]; });
+      document.querySelectorAll(".cb-item").forEach(function(x){ x.classList.remove("sel"); });
+      cart["bk_" + i] = {name:"IFC Chicken " + b.label, price:b.price, qty:1, code:b.code};
       el.classList.add("sel");
       renderCart();
-    };
+    });
     g.appendChild(el);
   });
 }
 
-// Build product cards
-function buildCards(gid, items){
-  const g = document.getElementById(gid); if(!g) return; g.innerHTML = "";
-  items.forEach((item, i) => {
+// Build product cards using DOM methods + addEventListener (no inline handlers)
+function buildCards(gid, items) {
+  const g = document.getElementById(gid);
+  if (!g) return;
+  g.innerHTML = "";
+  items.forEach(function(item, i) {
     const key = gid + "_" + i;
-    const d = document.createElement("div"); d.className = "card"; d.id = "c_" + key;
-    d.innerHTML = `
-      <img class="card-img" src="${item.img}" alt="${item.name}" loading="lazy" crossorigin="anonymous"
-           onerror="this.style.display='none';this.nextSibling.style.display='flex'">
-      <div class="card-img-ph">&#x1F357;</div>
-      <div class="card-body">
-        <div class="card-code">${item.code}</div>
-        <div class="card-name">${item.name}</div>
-        <div class="card-desc">${item.desc}</div>
-        <div class="card-footer">
-          <div class="card-price">MVR ${item.price}</div>
-          <div class="qty-row">
-            <button class="qb" onclick="event.stopPropagation();chg('${key}',${i},'${gid}',-1)">&#x2212;</button>
-            <span class="qn" id="qn_${key}">0</span>
-            <button class="qb" onclick="event.stopPropagation();chg('${key}',${i},'${gid}',1)">&#x2B;</button>
-          </div>
-        </div>
-      </div>
-    `;
-    g.appendChild(d);
+
+    const card = document.createElement("div");
+    card.className = "card";
+    card.id = "c_" + key;
+
+    const img = document.createElement("img");
+    img.className = "card-img";
+    img.src = item.img;
+    img.alt = item.name;
+    img.loading = "lazy";
+    img.onerror = function() {
+      this.style.display = "none";
+      this.nextSibling.style.display = "flex";
+    };
+
+    const ph = document.createElement("div");
+    ph.className = "card-img-ph";
+    ph.innerHTML = "&#x1F357;";
+
+    const body = document.createElement("div");
+    body.className = "card-body";
+
+    const btnMinus = document.createElement("button");
+    btnMinus.className = "qb";
+    btnMinus.innerHTML = "&#x2212;";
+    btnMinus.addEventListener("click", function(e) { e.stopPropagation(); chg(key, item, -1); });
+
+    const qnSpan = document.createElement("span");
+    qnSpan.className = "qn";
+    qnSpan.id = "qn_" + key;
+    qnSpan.textContent = "0";
+
+    const btnPlus = document.createElement("button");
+    btnPlus.className = "qb";
+    btnPlus.innerHTML = "&#x2B;";
+    btnPlus.addEventListener("click", function(e) { e.stopPropagation(); chg(key, item, 1); });
+
+    const qtyRow = document.createElement("div");
+    qtyRow.className = "qty-row";
+    qtyRow.appendChild(btnMinus);
+    qtyRow.appendChild(qnSpan);
+    qtyRow.appendChild(btnPlus);
+
+    const priceDiv = document.createElement("div");
+    priceDiv.className = "card-price";
+    priceDiv.textContent = "MVR " + item.price;
+
+    const footer = document.createElement("div");
+    footer.className = "card-footer";
+    footer.appendChild(priceDiv);
+    footer.appendChild(qtyRow);
+
+    body.innerHTML =
+      '<div class="card-code">' + item.code + '</div>' +
+      '<div class="card-name">' + item.name + '</div>' +
+      '<div class="card-desc">' + item.desc + '</div>';
+    body.appendChild(footer);
+
+    card.appendChild(img);
+    card.appendChild(ph);
+    card.appendChild(body);
+    g.appendChild(card);
   });
 }
 
-// Initialize all sections
-Object.keys(menus).forEach(k => {
-  if(document.getElementById("g-" + k)) buildCards("g-" + k, menus[k]);
+// Initialize all menu sections
+Object.keys(menus).forEach(function(k) {
+  if (document.getElementById("g-" + k)) buildCards("g-" + k, menus[k]);
 });
 buildBuckets();
 
-// Change quantity function
-function chg(key, idx, gid, delta){
-  const sec = gid.replace("g-", "");
-  let item = menus[sec] ? menus[sec][idx] : null;
-
-  // For buckets
-  if(key.startsWith("bk_")) {
-    item = cart[key]; // bucket already in cart
-  }
-
-  if(!item) return;
-
+// Update item quantity in cart
+function chg(key, item, delta) {
   const curQty = cart[key] ? cart[key].qty : 0;
   const newQty = Math.max(0, curQty + delta);
-
-  if(newQty === 0) delete cart[key];
-  else cart[key] = { name: item.name, price: item.price, qty: newQty, code: item.code };
-
-  // Update UI
+  if (newQty === 0) {
+    delete cart[key];
+  } else {
+    cart[key] = {name:item.name, price:item.price, qty:newQty, code:item.code};
+  }
   const qnEl = document.getElementById("qn_" + key);
-  if(qnEl) qnEl.textContent = cart[key] ? newQty : 0;
+  if (qnEl) qnEl.textContent = newQty;
   const cardEl = document.getElementById("c_" + key);
-  if(cardEl) cardEl.className = cart[key] ? "card sel" : "card";
-
+  if (cardEl) cardEl.className = newQty > 0 ? "card sel" : "card";
   renderCart();
 }
 
 // Render cart panel
-function renderCart(){
-  const keys = Object.keys(cart);
+function renderCart() {
+  const keys  = Object.keys(cart);
   const badge = document.getElementById("cbadge");
   const lines = document.getElementById("cart-lines");
-  const btn = document.getElementById("place-btn");
-  const totalItems = keys.reduce((s,k)=>s + cart[k].qty,0);
+  const btn   = document.getElementById("place-btn");
+  const totalItems = keys.reduce(function(s, k){ return s + cart[k].qty; }, 0);
   badge.textContent = totalItems + (totalItems === 1 ? " item" : " items");
 
-  if(keys.length === 0){
+  if (keys.length === 0) {
     lines.innerHTML = '<div class="empty-cart">No items yet — tap any meal to add it.</div>';
     btn.disabled = true;
     return;
   }
 
-  let sum = 0, html = "";
-  keys.forEach(k => {
-    const c = cart[k];
-    const sub = c.price * c.qty; sum += sub;
-    html += `<div class="cline">
-      <span class="cline-name">${c.name}</span>
-      <span class="cline-qty">x${c.qty}</span>
-      <span class="cline-price">MVR ${sub}</span>
-      <button class="cline-rm" onclick="rm('${k}')">&#x2715;</button>
-    </div>`;
+  let sum = 0;
+  lines.innerHTML = "";
+
+  keys.forEach(function(k) {
+    const c   = cart[k];
+    const sub = c.price * c.qty;
+    sum += sub;
+
+    const line = document.createElement("div");
+    line.className = "cline";
+    line.innerHTML =
+      '<span class="cline-name">'  + c.name + '</span>' +
+      '<span class="cline-qty">x'  + c.qty  + '</span>' +
+      '<span class="cline-price">MVR ' + sub + '</span>';
+
+    const rmBtn = document.createElement("button");
+    rmBtn.className = "cline-rm";
+    rmBtn.innerHTML = "&#x2715;";
+    rmBtn.addEventListener("click", function() { rm(k); });
+    line.appendChild(rmBtn);
+    lines.appendChild(line);
   });
-  html += `<div class="total-row"><span>Total</span><span class="total-price">MVR ${sum}</span></div>`;
-  lines.innerHTML = html;
+
+  const totalRow = document.createElement("div");
+  totalRow.className = "total-row";
+  totalRow.innerHTML = '<span>Total</span><span class="total-price">MVR ' + sum + '</span>';
+  lines.appendChild(totalRow);
+
   btn.disabled = false;
 }
 
-// Remove item
-function rm(key){
-  if(!cart[key]) return;
-  if(key.startsWith("bk_")){
+// Remove item from cart
+function rm(key) {
+  if (!cart[key]) return;
+  if (key.startsWith("bk_")) {
     const el = document.getElementById(key);
-    if(el) el.classList.remove("sel");
+    if (el) el.classList.remove("sel");
   } else {
-    const card = document.getElementById("c_" + key);
-    if(card) card.className = "card";
+    const cardEl = document.getElementById("c_" + key);
+    if (cardEl) cardEl.className = "card";
     const qnEl = document.getElementById("qn_" + key);
-    if(qnEl) qnEl.textContent = "0";
+    if (qnEl) qnEl.textContent = "0";
   }
   delete cart[key];
   renderCart();
 }
 
-// Tabs
-document.getElementById("tabs").addEventListener("click", function(e){
-  const t = e.target.closest(".tab"); if(!t) return;
-  document.querySelectorAll(".tab").forEach(x=>x.classList.remove("on"));
-  document.querySelectorAll(".section").forEach(x=>x.classList.remove("on"));
+// Tab switching
+document.getElementById("tabs").addEventListener("click", function(e) {
+  const t = e.target.closest(".tab");
+  if (!t) return;
+  document.querySelectorAll(".tab").forEach(function(x){ x.classList.remove("on"); });
+  document.querySelectorAll(".section").forEach(function(x){ x.classList.remove("on"); });
   t.classList.add("on");
   const sec = document.getElementById(t.dataset.sec);
-  if(sec) sec.classList.add("on");
+  if (sec) sec.classList.add("on");
 });
 
 // Place order
-document.getElementById("place-btn").addEventListener("click", async function(){
-  const name = document.getElementById("cname").value.trim();
-  const phone = document.getElementById("cphone").value.trim();
+document.getElementById("place-btn").addEventListener("click", async function() {
+  const name    = document.getElementById("cname").value.trim();
+  const phone   = document.getElementById("cphone").value.trim();
   const address = document.getElementById("caddress").value.trim();
-  const smsg = document.getElementById("smsg");
-  const btn = document.getElementById("place-btn");
+  const smsg    = document.getElementById("smsg");
+  const btn     = document.getElementById("place-btn");
 
-  if(!name){ smsg.style.display="block"; smsg.className="smsg err"; smsg.textContent="Please enter your name."; return; }
-  if(!phone || !validatePhone(phone)){ smsg.style.display="block"; smsg.className="smsg err"; smsg.textContent="Enter a valid phone number."; return; }
-  if(!address){ smsg.style.display="block"; smsg.className="smsg err"; smsg.textContent="Please enter your delivery address."; return; }
-  if(Object.keys(cart).length === 0){ smsg.style.display="block"; smsg.className="smsg err"; smsg.textContent="Your cart is empty."; return; }
+  smsg.style.display = "none";
 
-  const orderItems = Object.values(cart).map(c => ({
-    code: c.code,
-    name: c.name,
-    qty: c.qty,
-    unit_price: c.price,
-    subtotal: c.price * c.qty
-  }));
-  const total = orderItems.reduce((s,i)=>s+i.subtotal,0);
+  if (!name) {
+    smsg.style.display="block"; smsg.className="smsg err";
+    smsg.textContent="Please enter your name."; return;
+  }
+  if (!phone || !validatePhone(phone)) {
+    smsg.style.display="block"; smsg.className="smsg err";
+    smsg.textContent="Enter a valid phone number (7 digits, starting with 7 or 9)."; return;
+  }
+  if (!address) {
+    smsg.style.display="block"; smsg.className="smsg err";
+    smsg.textContent="Please enter your delivery address."; return;
+  }
+  if (Object.keys(cart).length === 0) {
+    smsg.style.display="block"; smsg.className="smsg err";
+    smsg.textContent="Your cart is empty."; return;
+  }
+
+  const orderItems = Object.values(cart).map(function(c) {
+    return {code:c.code, name:c.name, qty:c.qty, unit_price:c.price, subtotal:c.price * c.qty};
+  });
+  const total = orderItems.reduce(function(s, i){ return s + i.subtotal; }, 0);
   const payload = {
-    restaurant: "Island Fried Chicken",
-    customer_name: name,
-    phone: phone,
+    restaurant:       "Island Fried Chicken",
+    customer_name:    name,
+    phone:            phone,
     delivery_address: address,
-    order_time: new Date().toISOString(),
-    items: orderItems,
-    total_mvr: total
+    order_time:       new Date().toISOString(),
+    items:            orderItems,
+    total_mvr:        total
   };
 
+  console.log("Payload:", JSON.stringify(payload, null, 2));
+
   btn.disabled = true;
-  smsg.style.display="block"; smsg.className="smsg wait"; smsg.textContent="Sending your order...";
+  smsg.style.display = "block"; smsg.className = "smsg wait"; smsg.textContent = "Sending your order...";
 
-  try{
-    const res = await fetch(WEBHOOK, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
+  try {
+    const res  = await fetch(WEBHOOK, {
+      method:  "POST",
+      headers: {"Content-Type": "application/json"},
+      body:    JSON.stringify(payload)
     });
-
     const text = await res.text();
-    let data = {};
-    try { data = JSON.parse(text); } catch(e) { console.warn("Non-JSON response:", text); }
+    console.log("Response:", res.status, text);
 
-    if(res.ok && (data.status === "success" || !data.status)){
-      smsg.className="smsg ok"; smsg.textContent = data.message || "Order placed! We'll deliver to your address shortly.";
-      Object.keys(cart).forEach(k => {
-        const qnEl = document.getElementById("qn_" + k); if(qnEl) qnEl.textContent="0";
+    let data = {};
+    try { data = JSON.parse(text); } catch(e) {}
+
+    if (res.ok) {
+      smsg.className = "smsg ok";
+      smsg.textContent = data.message || "Order placed! We'll deliver to your address shortly.";
+      Object.keys(cart).forEach(function(k) {
+        const qnEl   = document.getElementById("qn_" + k); if (qnEl) qnEl.textContent = "0";
         const cardEl = document.getElementById(k.startsWith("bk_") ? k : "c_" + k);
-        if(cardEl) cardEl.className="card";
+        if (cardEl) cardEl.className = "card";
         delete cart[k];
       });
-      document.querySelectorAll(".cb-item").forEach(x=>x.classList.remove("sel"));
+      document.querySelectorAll(".cb-item").forEach(function(x){ x.classList.remove("sel"); });
       renderCart();
-      document.getElementById("cname").value="";
-      document.getElementById("cphone").value="";
-      document.getElementById("caddress").value="";
+      document.getElementById("cname").value    = "";
+      document.getElementById("cphone").value   = "";
+      document.getElementById("caddress").value = "";
     } else {
-      smsg.className="smsg err"; smsg.textContent = data.message || "Error processing your order.";
+      smsg.className = "smsg err";
+      smsg.textContent = data.message || ("Server error: " + res.status);
       btn.disabled = false;
     }
-  } catch(err){
-    smsg.className="smsg err"; smsg.textContent = "Could not send order. Please try again. (" + err.message + ")";
+  } catch(err) {
+    console.error("Fetch error:", err);
+    smsg.className = "smsg err";
+    smsg.textContent = err.message;
     btn.disabled = false;
   }
 });
