@@ -434,54 +434,57 @@ document.getElementById("tabs").addEventListener("click", function(e) {
   if (sec) sec.classList.add("on");
 });
 
-// ─── Place Order Handler (Revised) ─────────────────────────────────────────────
-document.getElementById("place-btn").addEventListener("click", function() {
-  const nameInput    = document.getElementById("cname").value.trim();
-  const phoneInput   = document.getElementById("cphone").value.trim();
-  const addressInput = document.getElementById("caddress").value.trim();
+// ─── Place Order ──────────────────────────────────────────────────────────────
+placeBtn.addEventListener("click", async function() {
+  const nameVal    = nameEl.value.trim();
+  const phoneVal   = normalisePhone(phoneEl.value.trim());
+  const addressVal = addressEl.value.trim();
 
-  // Validation
-  if (!validateName(nameInput)) { showMsg("err", "Enter a valid name."); return; }
-  if (!validatePhone(phoneInput)) { showMsg("err", "Enter a valid phone number."); return; }
-  if (!validateAddress(addressInput)) { showMsg("err", "Enter a valid address."); return; }
+  // Extra check just in case
+  if (!validateName(nameVal)) { showMsg("err", "Enter a valid name"); return; }
+  if (!validatePhone(phoneVal)) { showMsg("err", "Enter a valid phone number"); return; }
+  if (!validateAddress(addressVal)) { showMsg("err", "Enter a valid delivery address"); return; }
+  if (Object.keys(cart).length === 0) { showMsg("err", "Cart is empty"); return; }
 
-  hideMsg();
-
-  // Normalize phone for session_id
-  const sessionId = normalisePhone(phoneInput);
-
-  // Build rows with cart items
-  const rows = Object.values(cart).map(c => ({
-    Timestamp: new Date().toISOString(),
-    Name: nameInput,
-    Phone: phoneInput,
-    Address: addressInput,
-    "Item Code": c.code,
-    "Item Name": c.name,
-    Qty: c.qty,
-    Price: c.price,
-    Total: c.qty * c.price
-  }));
-
-  // Calculate order total
-  const orderTotal = rows.reduce((sum, r) => sum + r.Total, 0);
-
+  // Build payload
   const payload = {
-    session_id: sessionId,    // <-- only once at root level
-    rows: rows,
-    order_total: orderTotal,
-    row_count: rows.length
+    customer_name: nameVal,
+    customer_phone: phoneVal,
+    delivery_address: addressVal,
+    items: Object.values(cart).map(c => ({
+      code: c.code,
+      name: c.name,
+      qty: c.qty,
+      price: c.price
+    })),
+    session_id: phoneVal // ✅ Use phone as session_id
   };
 
-  // Send to webhook
-  fetch(WEBHOOK, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload)
-  })
-  .then(res => res.json())
-  .then(data => showMsg("ok", "Order placed successfully!"))
-  .catch(err => showMsg("err", "Error placing order."));
+  // Show waiting message
+  showMsg("wait", "Placing your order…");
+
+  try {
+    const res = await fetch(WEBHOOK, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+
+    if (!res.ok) throw new Error("Network error");
+
+    const data = await res.json();
+    if (data.success) {
+      showMsg("ok", "Order placed successfully!");
+      // Clear cart
+      Object.keys(cart).forEach(k => removeFromCart(k));
+      nameEl.value = ""; phoneEl.value = ""; addressEl.value = "";
+      updatePlaceBtn();
+    } else {
+      showMsg("err", data.message || "Failed to place order");
+    }
+  } catch (err) {
+    showMsg("err", err.message || "Something went wrong");
+  }
 });
 </script>
 </body>
