@@ -434,91 +434,63 @@ document.getElementById("tabs").addEventListener("click", function(e) {
   if (sec) sec.classList.add("on");
 });
 
-// ─── Place Order ─────────────────────────────────────────────────────────────
+// ─── Place Order Button ──────────────────────────────────────────────────────
 
-document.getElementById("place-btn").addEventListener("click", async function () {
-  const nameRaw    = document.getElementById("cname").value.trim();
-  const phoneRaw   = document.getElementById("cphone").value.trim();
-  const addressRaw = document.getElementById("caddress").value.trim();
-  const btn        = this;
-
+document.getElementById("place-btn").addEventListener("click", async function() {
   hideMsg();
 
-  if (!validateName(nameRaw)) {
-    showMsg("err", "Please enter a valid name (letters only, at least 2 characters)."); return;
-  }
-  if (!validatePhone(phoneRaw)) {
-    showMsg("err", "Enter a valid Maldivian phone number (7 digits starting with 7 or 9)."); return;
-  }
-  if (!validateAddress(addressRaw)) {
-    showMsg("err", "Please enter a delivery address (at least 5 characters)."); return;
-  }
-  if (Object.keys(cart).length === 0) {
-    showMsg("err", "Your cart is empty."); return;
+  // Grab customer info
+  const name    = document.getElementById("cname").value.trim();
+  const phone   = normalisePhone(document.getElementById("cphone").value.trim());
+  const address = document.getElementById("caddress").value.trim();
+
+  // Validate
+  if (!validateName(name))       return showMsg("err", "Enter a valid name");
+  if (!validatePhone(phone))     return showMsg("err", "Enter a valid phone number");
+  if (!validateAddress(address)) return showMsg("err", "Enter a valid address");
+
+  // Build clean payload for each cart item
+  const rows = Object.values(cart).map(item => ({
+    Timestamp: new Date().toISOString(),
+    Name: name,
+    Phone: phone,
+    Address: address,
+    "Item Code": item.code,
+    "Item Name": item.name,
+    Qty: item.qty,
+    Price: item.price,
+    Total: item.qty * item.price
+  }));
+
+  if (rows.length === 0) {
+    return showMsg("err", "Your cart is empty");
   }
 
-  const cleanPhone = normalisePhone(phoneRaw);
-  const timestamp  = new Date().toISOString();
-
-  const rows = Object.values(cart).map(function(c) {
-    return {
-      "Timestamp":  timestamp,
-      "Name":       nameRaw,
-      "Phone":      cleanPhone,
-      "Address":    addressRaw,
-      "Item Code":  c.code,
-      "Item Name":  c.name,
-      "Qty":        c.qty,
-      "Price":      c.price,
-      "Total":      c.price * c.qty
-    };
-  });
-
+  // Optional summary fields
   const payload = {
-    order_total: rows.reduce(function(s,r){ return s + r["Total"]; }, 0),
-    row_count:   rows.length,
-    rows:        rows
+    order_total: rows.reduce((sum, r) => sum + r.Total, 0),
+    row_count: rows.length,
+    rows
   };
 
-  btn.disabled = true;
-  showMsg("wait", "Sending your order…");
-
   try {
-    const res  = await fetch(WEBHOOK, {
-      method:  "POST",
-      headers: {"Content-Type": "application/json"},
-      body:    JSON.stringify(payload)
+    showMsg("wait", "Placing your order...");
+    const response = await fetch(WEBHOOK, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
     });
-    const text = await res.text();
-    let data = {};
-    try { data = JSON.parse(text); } catch(e) {}
 
-    if (res.ok && data.status !== "error") {
-      showMsg("ok", data.message || "Order placed! We'll deliver to your address shortly. 🍗");
-      Object.keys(cart).forEach(function(code) {
-        if (code.startsWith("IFC-BKT")) {
-          const el = document.getElementById("bk_" + code);
-          if (el) el.classList.remove("sel");
-        } else {
-          const cardEl = document.getElementById("card_" + code);
-          const qnEl   = document.getElementById("qn_" + code);
-          if (cardEl) cardEl.className = "card";
-          if (qnEl)   qnEl.textContent = "0";
-        }
-        delete cart[code];
-      });
-      document.querySelectorAll(".cb-item").forEach(function(x){ x.classList.remove("sel"); });
-      renderCart();
-      document.getElementById("cname").value    = "";
-      document.getElementById("cphone").value   = "";
-      document.getElementById("caddress").value = "";
-    } else {
-      showMsg("err", data.message || ("Server error: " + res.status));
-      btn.disabled = false;
-    }
-  } catch(err) {
-    showMsg("err", "Could not reach the server. Please check your connection and try again.");
-    btn.disabled = false;
+    if (!response.ok) throw new Error("Network response was not ok");
+
+    showMsg("ok", "Order placed successfully!");
+    
+    // Clear cart visually and logically
+    Object.keys(cart).forEach(code => removeFromCart(code));
+
+  } catch (err) {
+    console.error(err);
+    showMsg("err", "Failed to place order. Please try again.");
   }
 });
 </script>
