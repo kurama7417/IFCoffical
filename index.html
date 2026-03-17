@@ -434,22 +434,7 @@ document.getElementById("tabs").addEventListener("click", function(e) {
   if (sec) sec.classList.add("on");
 });
 
-// ─── Place Order ──────────────────────────────────────────────────────────────
-//
-// Payload structure designed to match your Google Sheets columns exactly:
-//
-//   Orders sheet columns:
-//     Timestamp | Name | Phone | Address | Item Code | Item Name | Qty | Price | Total
-//
-//   Each cart item becomes one flat row object with those exact key names.
-//   n8n receives { order_total, row_count, rows: [...] } and can loop over
-//   `rows` with a Split In Batches or Loop node, appending each row directly
-//   to the sheet without any field-mapping step.
-//
-//   Inventory sheet columns (for the Read Inventory tool):
-//     Item Code | Item Name | Stock | Status
-//   The "Item Code" values sent here match those in the Inventory sheet exactly,
-//   so n8n can do a straightforward VLOOKUP / sheet lookup by Item Code.
+// ─── Place Order ─────────────────────────────────────────────────────────────
 
 document.getElementById("place-btn").addEventListener("click", async function () {
   const nameRaw    = document.getElementById("cname").value.trim();
@@ -459,7 +444,6 @@ document.getElementById("place-btn").addEventListener("click", async function ()
 
   hideMsg();
 
-  // ── Validate ──
   if (!validateName(nameRaw)) {
     showMsg("err", "Please enter a valid name (letters only, at least 2 characters)."); return;
   }
@@ -473,10 +457,9 @@ document.getElementById("place-btn").addEventListener("click", async function ()
     showMsg("err", "Your cart is empty."); return;
   }
 
-  const cleanPhone = normalisePhone(phoneRaw); // always send clean 7-digit number
+  const cleanPhone = normalisePhone(phoneRaw);
   const timestamp  = new Date().toISOString();
 
-  // ── One flat row per cart item — keys match sheet column headers exactly ──
   const rows = Object.values(cart).map(function(c) {
     return {
       "Timestamp":  timestamp,
@@ -512,8 +495,6 @@ document.getElementById("place-btn").addEventListener("click", async function ()
 
     if (res.ok && data.status !== "error") {
       showMsg("ok", data.message || "Order placed! We'll deliver to your address shortly. 🍗");
-
-      // ── Full cart reset ──
       Object.keys(cart).forEach(function(code) {
         if (code.startsWith("IFC-BKT")) {
           const el = document.getElementById("bk_" + code);
@@ -531,7 +512,6 @@ document.getElementById("place-btn").addEventListener("click", async function ()
       document.getElementById("cname").value    = "";
       document.getElementById("cphone").value   = "";
       document.getElementById("caddress").value = "";
-      // btn stays disabled after success — prevents duplicate submissions
     } else {
       showMsg("err", data.message || ("Server error: " + res.status));
       btn.disabled = false;
