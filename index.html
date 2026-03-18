@@ -64,10 +64,12 @@ html,body{width:100%;max-width:480px;margin:0 auto;font-family:-apple-system,Bli
 .place-btn{width:100%;margin-top:13px;padding:17px;background:#C0392B;color:#fff;border:none;border-radius:13px;font-size:16px;font-weight:500;cursor:pointer;letter-spacing:0.3px;transition:opacity 0.15s;touch-action:manipulation;min-height:56px}  
 .place-btn:disabled{opacity:0.38;cursor:not-allowed}  
 .place-btn:not(:disabled):active{opacity:0.82}  
-.smsg{margin-top:12px;padding:13px 14px;border-radius:10px;font-size:14px;font-weight:500;text-align:center;display:none;line-height:1.4}  
-.smsg.ok{background:#d4edda;color:#155724}  
-.smsg.err{background:#f8d7da;color:#721c24}  
-.smsg.wait{background:#fff3cd;color:#856404}  
+
+/* ── Status message — displays AI agent output directly ── */
+.smsg{margin-top:12px;padding:13px 14px;border-radius:10px;font-size:14px;font-weight:500;text-align:center;display:none;line-height:1.4}
+.smsg.ok{background:#d4edda;color:#155724}
+.smsg.err{background:#f8d7da;color:#721c24}
+.smsg.wait{background:#fff3cd;color:#856404}
 </style>  
 </head>  
 <body>  <div class="hdr">  
@@ -115,8 +117,8 @@ html,body{width:100%;max-width:480px;margin:0 auto;font-family:-apple-system,Bli
     <input type="tel" id="cphone" placeholder="Phone number (e.g. 7123456)" autocomplete="tel" inputmode="numeric" />  
     <textarea id="caddress" placeholder="Delivery address (flat no., building, street...)"></textarea>  
   </div>  
-  <button class="place-btn" id="place-btn" disabled>Place Order</button>  
-  <div class="smsg" id="smsg"></div>  
+  <button class="place-btn" id="place-btn" disabled>Place Order</button>
+  <div class="smsg" id="smsg"></div>
 </div>  <script>  
 // Switch to /webhook/ (remove "-test") once your workflow is activated in n8n  
 const WEBHOOK = "https://kurama7417.app.n8n.cloud/webhook-test/367e61e9-bc0b-4a82-9964-bcf208bbf511";  
@@ -265,17 +267,19 @@ function validatePhone(v) {
 function validateAddress(v) {  
   return v.length >= 5;  
 }  
-  
-function showMsg(type, text) {  
-  const el = document.getElementById("smsg");  
-  el.className = "smsg " + type;  
-  el.textContent = text;  
-  el.style.display = "block";  
-}  
-  
-function hideMsg() {  
-  document.getElementById("smsg").style.display = "none";  
-}  
+
+// ─── Status message helper ────────────────────────────────────────────────────
+function showMsg(type, text) {
+  const el = document.getElementById("smsg");
+  el.className    = "smsg " + type;
+  el.textContent  = text;
+  el.style.display = "block";
+  el.scrollIntoView({ behavior: "smooth", block: "nearest" });
+}
+
+function hideMsg() {
+  document.getElementById("smsg").style.display = "none";
+}
   
 // ─── Build chicken bucket buttons ────────────────────────────────────────────  
   
@@ -423,22 +427,28 @@ document.getElementById("tabs").addEventListener("click", function(e) {
   if (sec) sec.classList.add("on");  
 });  
   
-// ─── Place Order Handler (Revised) ─────────────────────────────────────────────  
+// ─── Place Order Handler ──────────────────────────────────────────────────────
+// NOTE: Payload is identical to the original — only the response handling is new.
 document.getElementById("place-btn").addEventListener("click", function() {  
   const nameInput    = document.getElementById("cname").value.trim();  
   const phoneInput   = document.getElementById("cphone").value.trim();  
   const addressInput = document.getElementById("caddress").value.trim();  
   
   // Validation  
-  if (!validateName(nameInput)) { showMsg("err", "Enter a valid name."); return; }  
-  if (!validatePhone(phoneInput)) { showMsg("err", "Enter a valid phone number."); return; }  
-  if (!validateAddress(addressInput)) { showMsg("err", "Enter a valid address."); return; }  
+  if (!validateName(nameInput))       { showMsg("err", "Enter a valid name."); return; }
+  if (!validatePhone(phoneInput))     { showMsg("err", "Enter a valid phone number."); return; }
+  if (!validateAddress(addressInput)) { showMsg("err", "Enter a valid address."); return; }
   
-  hideMsg();  
-  
+  hideMsg();
+
+  const btn = document.getElementById("place-btn");
+  btn.disabled = true;
+  showMsg("wait", "Sending your order…");
+
   // Normalize phone for session_id  
   const sessionId = normalisePhone(phoneInput);  
   
+  // ── PAYLOAD UNCHANGED FROM ORIGINAL ──────────────────────────────────────
   // Build rows with cart items  
   const rows = Object.values(cart).map(c => ({  
     Timestamp: new Date().toISOString(),  
@@ -461,17 +471,33 @@ document.getElementById("place-btn").addEventListener("click", function() {
     rows: rows,  
     order_total: orderTotal,  
     row_count: rows.length  
-  };  
+  };
+  // ─────────────────────────────────────────────────────────────────────────
   
   // Send to webhook  
   fetch(WEBHOOK, {  
     method: "POST",  
     headers: { "Content-Type": "application/json" },  
     body: JSON.stringify(payload)  
-  })  
-  .then(res => res.json())  
-  .then(data => showMsg("ok", "Order placed successfully!"))  
-  .catch(err => showMsg("err", "Error placing order."));  
+  })
+  .then(function(res) {
+    // Parse JSON regardless of HTTP status so we can read the AI agent's message
+    return res.json().then(function(data) {
+      return { ok: res.ok, data: data };
+    });
+  })
+  .then(function(res) {
+    btn.disabled = false;
+    // Display exactly what the AI agent returns from the Respond to Webhook node
+    return res.text().then(function(text) {
+      showMsg("ok", text);
+    });
+  })
+  .catch(function(err) {
+    // Only shown if the request never reached the server at all
+    btn.disabled = false;
+    showMsg("err", "Connection error. Please check your internet and try again.");
+  });
 });  
 </script>  
 </body>  
