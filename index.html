@@ -70,6 +70,7 @@ html,body{width:100%;max-width:480px;margin:0 auto;font-family:-apple-system,Bli
 .smsg.ok{background:#d4edda;color:#155724}
 .smsg.err{background:#f8d7da;color:#721c24}
 .smsg.wait{background:#fff3cd;color:#856404}
+.smsg.oos{background:#fff3cd;color:#7a5c00;border:1px solid #ffe48a}
 </style>  
 </head>  
 <body>  <div class="hdr">  
@@ -482,9 +483,16 @@ document.getElementById("place-btn").addEventListener("click", function() {
   })
   .then(function(res) {
     btn.disabled = false;
-    return res.text().then(function(text) {
-      // Display exactly what the AI agent outputs from the Respond to Webhook node
-      showMsg("ok", text);
+    return res.json().then(function(data) {
+      var status  = (data.status  || "").toLowerCase();
+      var message =  data.message || "";
+      if (status === "success") {
+        showMsg("ok",  message);
+      } else if (status === "out_of_stock") {
+        showMsg("oos", message);
+      } else {
+        showMsg("err", message);
+      }
     });
   })
   .catch(function(err) {
