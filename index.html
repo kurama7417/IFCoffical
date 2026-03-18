@@ -72,264 +72,220 @@ html,body{width:100%;max-width:480px;margin:0 auto;font-family:-apple-system,Bli
 </head>  
 <body>  
 <div class="hdr">  
-  <div class="hdr-ring">IFC</div>  
-  <h1>Island Fried Chicken</h1>  
-  <p>Real Taste of Fried Chicken — Hulhumale, Maldives</p>  
+  <div class="hdr-ring">IFC</div>  
+  <h1>Island Fried Chicken</h1>  
+  <p>Real Taste of Fried Chicken — Hulhumale, Maldives</p>  
 </div>  
 <div class="tabs-wrap" id="tabs">  
-  <button class="tab on" data-sec="individual">Individual</button>  
-  <button class="tab" data-sec="budget">Budget</button>  
-  <button class="tab" data-sec="lunch">Lunch</button>  
-  <button class="tab" data-sec="kids">Kids</button>  
-  <button class="tab" data-sec="family">Family</button>  
-  <button class="tab" data-sec="chicken">Chicken</button>  
-  <button class="tab" data-sec="sides">Sides</button>  
-  <button class="tab" data-sec="wraps">Wraps</button>  
-  <button class="tab" data-sec="burgers">Burgers</button>  
-  <button class="tab" data-sec="pizza">Pizza</button>  
-  <button class="tab" data-sec="otg">On The Go</button>  
-  <button class="tab" data-sec="drinks">Drinks</button>  
-</div>  <!-- Sections -->  <div id="individual" class="section on"><div class="sec-lbl">Individual Meals</div><div class="grid2" id="g-individual"></div></div>  
+  <button class="tab on" data-sec="individual">Individual</button>  
+  <button class="tab" data-sec="budget">Budget</button>  
+  <button class="tab" data-sec="lunch">Lunch</button>  
+  <button class="tab" data-sec="kids">Kids</button>  
+  <button class="tab" data-sec="family">Family</button>  
+  <button class="tab" data-sec="chicken">Chicken</button>  
+  <button class="tab" data-sec="sides">Sides</button>  
+  <button class="tab" data-sec="wraps">Wraps</button>  
+  <button class="tab" data-sec="burgers">Burgers</button>  
+  <button class="tab" data-sec="pizza">Pizza</button>  
+  <button class="tab" data-sec="otg">On The Go</button>  
+  <button class="tab" data-sec="drinks">Drinks</button>  
+</div>  
+<!-- Sections -->  
+<div id="individual" class="section on"><div class="sec-lbl">Individual Meals</div><div class="grid2" id="g-individual"></div></div>  
 <div id="budget" class="section"><div class="sec-lbl">Budget Meals</div><div class="grid2" id="g-budget"></div></div>  
 <div id="lunch" class="section"><div class="sec-lbl">Lunch Meals</div><div class="grid2" id="g-lunch"></div></div>  
 <div id="kids" class="section"><div class="sec-lbl">Kids Meals</div><div class="grid2" id="g-kids"></div></div>  
 <div id="family" class="section"><div class="sec-lbl">Family Meals</div><div class="grid2" id="g-family"></div></div>  
 <div id="chicken" class="section">  
-  <div class="sec-lbl">IFC Chicken Buckets</div>  
-  <div class="chicken-banner"><div class="cb-title">Tap a size to add to your order</div><div class="cb-prices" id="bucket-grid"></div></div>  
-  <div class="sec-lbl">IFC Delicious</div><div class="grid2" id="g-delicious"></div>  
+  <div class="sec-lbl">IFC Chicken Buckets</div>  
+  <div class="chicken-banner"><div class="cb-title">Tap a size to add to your order</div><div class="cb-prices" id="bucket-grid"></div></div>  
+  <div class="sec-lbl">IFC Delicious</div><div class="grid2" id="g-delicious"></div>  
 </div>  
 <div id="sides" class="section"><div class="sec-lbl">Side Items</div><div class="grid2" id="g-sides"></div></div>  
 <div id="wraps" class="section"><div class="sec-lbl">Wrap Specials</div><div class="grid2" id="g-wraps"></div></div>  
 <div id="burgers" class="section"><div class="sec-lbl">Burgers & Mini Subs</div><div class="grid2" id="g-burgers"></div></div>  
 <div id="pizza" class="section">  
-  <div class="sec-lbl">Pizza</div><div class="grid2" id="g-pizza"></div>  
-  <div class="divider"></div>  
-  <div class="sec-lbl">Cone Pizza</div><div class="grid2" id="g-conepizza"></div>  
+  <div class="sec-lbl">Pizza</div><div class="grid2" id="g-pizza"></div>  
+  <div class="divider"></div>  
+  <div class="sec-lbl">Cone Pizza</div><div class="grid2" id="g-conepizza"></div>  
 </div>  
 <div id="otg" class="section"><div class="sec-lbl">On The Go</div><div class="grid2" id="g-otg"></div></div>  
-<div id="drinks" class="section"><div class="sec-lbl">Drinks</div><div class="grid2" id="g-drinks"></div></div>  <div class="cart-panel">  
-  <div class="cart-hdr"><span class="cart-hdr-title">Your Order</span><span class="cbadge" id="cbadge">0 items</span></div>  
-  <div id="cart-lines"><div class="empty-cart">No items yet — tap any meal to add it.</div></div>  
-  <div class="fields">  
-    <input type="text" id="cname" placeholder="Your name" autocomplete="name" />  
-    <input type="tel" id="cphone" placeholder="Phone number (e.g. 7123456)" autocomplete="tel" inputmode="numeric" />  
-    <textarea id="caddress" placeholder="Delivery address (flat no., building, street...)"></textarea>  
-  </div>  
-  <button class="place-btn" id="place-btn" disabled>Place Order</button>  
-  <div class="smsg" id="smsg"></div>  
-</div>  <script>  
+<div id="drinks" class="section"><div class="sec-lbl">Drinks</div><div class="grid2" id="g-drinks"></div></div>  
+<div class="cart-panel">  
+  <div class="cart-hdr"><span class="cart-hdr-title">Your Order</span><span class="cbadge" id="cbadge">0 items</span></div>  
+  <div id="cart-lines"><div class="empty-cart">No items yet — tap any meal to add it.</div></div>  
+  <div class="fields">  
+    <input type="text" id="cname" placeholder="Your name" autocomplete="name" />  
+    <input type="tel" id="cphone" placeholder="Phone number (e.g. 7123456)" autocomplete="tel" inputmode="numeric" />  
+    <textarea id="caddress" placeholder="Delivery address (flat no., building, street...)"></textarea>  
+  </div>  
+  <button class="place-btn" id="place-btn" disabled>Place Order</button>  
+  <div class="smsg" id="smsg"></div>  
+</div>  
+<script>  
 // ─── Constants ───────────────────────────────────────────────────────────────  
 const WEBHOOK = "https://kurama7417.app.n8n.cloud/webhook-test/367e61e9-bc0b-4a82-9964-bcf208bbf511";  
-  
 const IMGS = {  
-  individual: "https://images.unsplash.com/photo-1626645738196-c2a7c87a8f58?w=400&q=80&auto=format&fit=crop",  
-  budget:     "https://images.unsplash.com/photo-1561758033-d89a9ad46330?w=400&q=80&auto=format&fit=crop",  
-  ricemeal:   "https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=400&q=80&auto=format&fit=crop",  
-  lunch:      "https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?w=400&q=80&auto=format&fit=crop",  
-  kids:       "https://images.unsplash.com/photo-1592415486689-125cbbfcdfed?w=400&q=80&auto=format&fit=crop",  
-  family:     "https://images.unsplash.com/photo-1569058242567-93de6f36f8eb?w=400&q=80&auto=format&fit=crop",  
-  chicken:    "https://images.unsplash.com/photo-1567620832903-9fc6debc209f?w=400&q=80&auto=format&fit=crop",  
-  strips:     "https://images.unsplash.com/photo-1562967914-608f82629710?w=400&q=80&auto=format&fit=crop",  
-  fries:      "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=400&q=80&auto=format&fit=crop",  
-  nuggets:    "https://images.unsplash.com/photo-1619881589316-1a4ef1c91b78?w=400&q=80&auto=format&fit=crop",  
-  wrap:       "https://images.unsplash.com/photo-1598515214211-89d3c73ae83b?w=400&q=80&auto=format&fit=crop",  
-  burger:     "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&q=80&auto=format&fit=crop",  
-  sub:        "https://images.unsplash.com/photo-1509722747041-616f39b57569?w=400&q=80&auto=format&fit=crop",  
-  pizza:      "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=400&q=80&auto=format&fit=crop",  
-  conepizza:  "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=400&q=80&auto=format&fit=crop",  
-  waffle:     "https://images.unsplash.com/photo-1484723091739-30a097e8f929?w=400&q=80&auto=format&fit=crop",  
-  coke:       "https://images.unsplash.com/photo-1554866585-cd94860890b7?w=400&q=80&auto=format&fit=crop",  
+  individual: "https://images.unsplash.com/photo-1626645738196-c2a7c87a8f58?w=400&q=80&auto=format&fit=crop",  
+  budget:     "https://images.unsplash.com/photo-1561758033-d89a9ad46330?w=400&q=80&auto=format&fit=crop",  
+  ricemeal:   "https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=400&q=80&auto=format&fit=crop",  
+  lunch:      "https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?w=400&q=80&auto=format&fit=crop",  
+  kids:       "https://images.unsplash.com/photo-1592415486689-125cbbfcdfed?w=400&q=80&auto=format&fit=crop",  
+  family:     "https://images.unsplash.com/photo-1569058242567-93de6f36f8eb?w=400&q=80&auto=format&fit=crop",  
+  chicken:    "https://images.unsplash.com/photo-1567620832903-9fc6debc209f?w=400&q=80&auto=format&fit=crop",  
+  strips:     "https://images.unsplash.com/photo-1562967914-608f82629710?w=400&q=80&auto=format&fit=crop",  
+  fries:      "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=400&q=80&auto=format&fit=crop",  
+  nuggets:    "https://images.unsplash.com/photo-1619881589316-1a4ef1c91b78?w=400&q=80&auto=format&fit=crop",  
+  wrap:       "https://images.unsplash.com/photo-1598515214211-89d3c73ae83b?w=400&q=80&auto=format&fit=crop",  
+  burger:     "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&q=80&auto=format&fit=crop",  
+  sub:        "https://images.unsplash.com/photo-1509722747041-616f39b57569?w=400&q=80&auto=format&fit=crop",  
+  pizza:      "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=400&q=80&auto=format&fit=crop",  
+  conepizza:  "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=400&q=80&auto=format&fit=crop",  
+  waffle:     "https://images.unsplash.com/photo-1484723091739-30a097e8f929?w=400&q=80&auto=format&fit=crop",  
+  coke:       "https://images.unsplash.com/photo-1554866585-cd94860890b7?w=400&q=80&auto=format&fit=crop",  
 };  
-  
 // ─── Menus, buckets, and cart ───────────────────────────────────────────────  
 const menus = { /* ... all menus as you already provided ... */ };  
 const buckets = [ /* ... all bucket items as you already provided ... */ ];  
 const cart = {};  
-  
 // ─── Validation functions ───────────────────────────────────────────────────  
 function validateName(v) { return /^[A-Za-z\s]{2,}$/.test(v); }  
 function normalisePhone(v) { return v.replace(/^\+?960/, "").replace(/\s/g, ""); }  
 function validatePhone(v) { return /^[79]\d{6}$/.test(normalisePhone(v)); }  
 function validateAddress(v) { return v.length >= 5; }  
-  
 function showMsg(type, text){ const el = document.getElementById("smsg"); el.className = "smsg " + type; el.textContent = text; el.style.display = "block"; }  
 function hideMsg(){ document.getElementById("smsg").style.display = "none"; }  
-  
 // ─── Build chicken bucket buttons ──────────────────────────────────────────  
-function buildBuckets() {  
-  const g = document.getElementById("bucket-grid");  
-  g.innerHTML = "";  
-  buckets.forEach(b => {  
-    const el = document.createElement("div");  
-    el.className = "cb-item";  
-    el.id = "bk_" + b.code;  
-  
-    const codeEl = document.createElement("span");  
-    codeEl.className = "cb-code";  
-    codeEl.textContent = b.code;  
-  
-    const nameEl = document.createElement("div");  
-    nameEl.className = "cb-name";  
-    nameEl.textContent = b.name;  
-  
-    const priceEl = document.createElement("span");  
-    priceEl.className = "cb-price";  
-    priceEl.textContent = "MVR " + b.price.toFixed(2);  
-  
-    el.appendChild(codeEl);  
-    el.appendChild(nameEl);  
-    el.appendChild(priceEl);  
-  
-    el.addEventListener("click", () => {  
-      addToCart(b);  
-    });  
-  
-    g.appendChild(el);  
-  });  
+function buildBuckets(){  
+  const g = document.getElementById("bucket-grid"); g.innerHTML = "";  
+  buckets.forEach(b=>{  
+    const el = document.createElement("div"); el.className = "cb-item"; el.id = "bk_"+b.code;  
+    const codeEl = document.createElement("span"); codeEl.className = "cb-code"; codeEl.textContent = b.code;  
+    const nameEl = document.createElement("div"); nameEl.className = "cb-name"; name  
+nameEl.textContent = b.name;  
+    const priceEl = document.createElement("span"); priceEl.className = "cb-price"; priceEl.textContent = "MVR " + b.price.toFixed(2);  
+    el.appendChild(codeEl); el.appendChild(nameEl); el.appendChild(priceEl);  
+    el.addEventListener("click", ()=>{  
+      addToCart(b);  
+    });  
+    g.appendChild(el);  
+  });  
 }  
-  
 // ─── Add to cart ─────────────────────────────────────────────────────────────  
-function addToCart(item) {  
-  if (cart[item.code]) {  
-    cart[item.code].qty += 1;  
-  } else {  
-    cart[item.code] = { ...item, qty: 1 };  
-  }  
-  renderCart();  
+function addToCart(item){  
+  if(cart[item.code]){  
+    cart[item.code].qty += 1;  
+  } else {  
+    cart[item.code] = { ...item, qty: 1 };  
+  }  
+  renderCart();  
 }  
-  
 // ─── Remove from cart ───────────────────────────────────────────────────────  
-function removeFromCart(code) {  
-  delete cart[code];  
-  renderCart();  
+function removeFromCart(code){  
+  delete cart[code];  
+  renderCart();  
 }  
-  
 // ─── Change quantity ─────────────────────────────────────────────────────────  
-function changeQty(code, delta) {  
-  if (cart[code]) {  
-    cart[code].qty += delta;  
-    if (cart[code].qty <= 0) removeFromCart(code);  
-  }  
-  renderCart();  
+function changeQty(code, delta){  
+  if(cart[code]){  
+    cart[code].qty += delta;  
+    if(cart[code].qty <= 0) removeFromCart(code);  
+  }  
+  renderCart();  
 }  
-  
 // ─── Render cart ────────────────────────────────────────────────────────────  
-function renderCart() {  
-  const linesEl = document.getElementById("cart-lines");  
-  linesEl.innerHTML = "";  
-  const keys = Object.keys(cart);  
-  if (keys.length === 0) {  
-    linesEl.innerHTML = '<div class="empty-cart">No items yet — tap any meal to add it.</div>';  
-    document.getElementById("cbadge").textContent = "0 items";  
-    document.getElementById("place-btn").disabled = true;  
-    return;  
-  }  
-  let total = 0, totalItems = 0;  
-  keys.forEach(k => {  
-    const item = cart[k];  
-    total += item.price * item.qty;  
-    totalItems += item.qty;  
-    const line = document.createElement("div");  
-    line.className = "cline";  
-    line.innerHTML = `  
-      <div class="cline-name">${item.name}</div>  
-      <div class="cline-qty">  
-        <button class="qb" onclick="changeQty('${k}', -1)">-</button>  
-        <span class="qn">${item.qty}</span>  
-        <button class="qb" onclick="changeQty('${k}', 1)">+</button>  
-      </div>  
-      <div class="cline-price">MVR ${(item.price*item.qty).toFixed(2)}</div>  
-      <button class="cline-rm" onclick="removeFromCart('${k}')">&times;</button>  
-    `;  
-    linesEl.appendChild(line);  
-  });  
-  const totalRow = document.createElement("div");  
-  totalRow.className = "total-row";  
-  totalRow.innerHTML = `<span>Total</span><span class="total-price">MVR ${total.toFixed(2)}</span>`;  
-  linesEl.appendChild(totalRow);  
-  document.getElementById("cbadge").textContent = `${totalItems} items`;  
-  document.getElementById("place-btn").disabled = false;  
+function renderCart(){  
+  const linesEl = document.getElementById("cart-lines");  
+  linesEl.innerHTML = "";  
+  const keys = Object.keys(cart);  
+  if(keys.length === 0){  
+    linesEl.innerHTML = '<div class="empty-cart">No items yet — tap any meal to add it.</div>';  
+    document.getElementById("cbadge").textContent = "0 items";  
+    document.getElementById("place-btn").disabled = true;  
+    return;  
+  }  
+  let total = 0, totalItems = 0;  
+  keys.forEach(k=>{  
+    const item = cart[k];  
+    total += item.price * item.qty;  
+    totalItems += item.qty;  
+    const line = document.createElement("div"); line.className = "cline";  
+    line.innerHTML = `  
+      <div class="cline-name">${item.name}</div>  
+      <div class="cline-qty">  
+        <button class="qb" onclick="changeQty('${k}', -1)">-</button>  
+        <span class="qn">${item.qty}</span>  
+        <button class="qb" onclick="changeQty('${k}', 1)">+</button>  
+      </div>  
+      <div class="cline-price">MVR ${(item.price*item.qty).toFixed(2)}</div>  
+      <button class="cline-rm" onclick="removeFromCart('${k}')">&times;</button>  
+    `;  
+    linesEl.appendChild(line);  
+  });  
+  const totalRow = document.createElement("div"); totalRow.className = "total-row";  
+  totalRow.innerHTML = `<span>Total</span><span class="total-price">MVR ${total.toFixed(2)}</span>`;  
+  linesEl.appendChild(totalRow);  
+  document.getElementById("cbadge").textContent = `${totalItems} items`;  
+  document.getElementById("place-btn").disabled = false;  
 }  
-  
-// ─── Check stock and disable out-of-stock buckets ──────────────────────────  
-async function checkStock() {  
-  try {  
-    const res = await fetch(WEBHOOK, {  
-      method: "POST",  
-      headers: { "Content-Type": "application/json" },  
-      body: JSON.stringify({  
-        action: "check_stock",  
-        items: buckets.map(b => ({ code: b.code, qty: 1 }))  
-      })  
-    });  
-    const data = await res.json();  
-    if (data.stock) {  
-      buckets.forEach(b => {  
-        const el = document.getElementById("bk_" + b.code);  
-        if (!el) return;  
-        const available = data.stock[b.code] ?? 0;  
-        if (available <= 0) {  
-          el.classList.add("disabled");  
-          el.style.opacity = "0.5";  
-          el.style.pointerEvents = "none";  
-        } else {  
-          el.classList.remove("disabled");  
-          el.style.opacity = "1";  
-          el.style.pointerEvents = "auto";  
-        }  
-      });  
-    }  
-  } catch (e) {  
-    console.error("Stock check failed:", e);  
-  }  
-}  
-  
-// ─── Place order click handler ─────────────────────────────────────────────  
-document.getElementById("place-btn").addEventListener("click", async () => {  
-  hideMsg();  
-  const name = inputs[0].value.trim();  
-  const phone = normalisePhone(inputs[1].value.trim());  
-  const address = inputs[2].value.trim();  
-  if(!validateName(name) || !validatePhone(phone) || !validateAddress(address)){  
-    showMsg("err","Please fill all details correctly.");  
-    return;  
-  }  
-  if(Object.keys(cart).length===0){  
-    showMsg("err","Cart is empty.");  
-    return;  
-  }  
-  showMsg("wait","Placing your order…");  
-  const orderData = {  
-    customer: { name, phone, address },  
-    items: Object.values(cart).map(i=>({ code:i.code, name:i.name, price:i.price, qty:i.qty })),  
-    total: Object.values(cart).reduce((sum,i)=>sum+i.price*i.qty,0)  
-  };  
-  try {  
-    const res = await fetch(WEBHOOK, {  
-      method:"POST",  
-      headers:{ "Content-Type":"application/json" },  
-      body: JSON.stringify(orderData)  
-    });  
-    const data = await res.json();  
-    // Display exactly whatever AI agent outputs  
-    if(data.status === "ok") {  
-      showMsg("ok", JSON.stringify(data));  
-      Object.keys(cart).forEach(k=>delete cart[k]);  
-      renderCart();  
-      inputs.forEach(i=>i.value="");  
-      document.getElementById("place-btn").disabled = true;  
-    } else {  
-      showMsg("err", JSON.stringify(data));  
-    }  
-  } catch(e){  
-    showMsg("err","Network error. Try again.");  
-  }  
+// ─── Tabs ───────────────────────────────────────────────────────────────────  
+document.querySelectorAll(".tab").forEach(tab=>{  
+  tab.addEventListener("click", ()=>{  
+    document.querySelectorAll(".tab").forEach(t=>t.classList.remove("on"));  
+    tab.classList.add("on");  
+    document.querySelectorAll(".section").forEach(s=>s.classList.remove("on"));  
+    document.getElementById(tab.dataset.sec).classList.add("on");  
+  });  
 });  
-  
+// ─── Input validation for enabling order button ──────────────────────────────  
+const inputs = ["cname","cphone","caddress"].map(id=>document.getElementById(id));  
+inputs.forEach(input=>{  
+  input.addEventListener("input", ()=>{  
+    const valid = validateName(inputs[0].value) && validatePhone(inputs[1].value) && validateAddress(inputs[2].value);  
+    document.getElementById("place-btn").disabled = !valid || Object.keys(cart).length===0;  
+  });  
+});  
+// ─── Place order ────────────────────────────────────────────────────────────  
+document.getElementById("place-btn").addEventListener("click", async ()=>{  
+  hideMsg();  
+  const name = inputs[0].value.trim();  
+  const phone = normalisePhone(inputs[1].value.trim());  
+  const address = inputs[2].value.trim();  
+  if(!validateName(name) || !validatePhone(phone) || !validateAddress(address)){  
+    showMsg("err","Please fill all details correctly.");  
+    return;  
+  }  
+  if(Object.keys(cart).length===0){  
+    showMsg("err","Cart is empty.");  
+    return;  
+  }  
+  showMsg("wait","Placing your order…");  
+  const orderData = {  
+    customer: { name, phone, address },  
+    items: Object.values(cart).map(i=>({ code:i.code, name:i.name, price:i.price, qty:i.qty })),  
+    total: Object.values(cart).reduce((sum,i)=>sum+i.price*i.qty,0)  
+  };  
+  try{  
+    const res = await fetch(WEBHOOK, {  
+      method:"POST",  
+      headers:{ "Content-Type":"application/json" },  
+      body: JSON.stringify(orderData)  
+    });  
+    if(res.ok){  
+      showMsg("ok","Order placed successfully!");  
+      Object.keys(cart).forEach(k=>delete cart[k]);  
+      renderCart();  
+      inputs.forEach(i=>i.value="");  
+      document.getElementById("place-btn").disabled = true;  
+    } else {  
+      showMsg("err","Failed to place order. Try again.");  
+    }  
+  }catch(e){  
+    showMsg("err","Network error. Try again.");  
+  }  
+});  
 // ─── Initialize ─────────────────────────────────────────────────────────────  
 buildBuckets();  
-checkStock();  
 </script>  
 </body>  
 </html>
