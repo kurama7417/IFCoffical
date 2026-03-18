@@ -1,187 +1,480 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Island Fried Chicken — Online Menu</title>
-<style>
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html,body{width:100%;max-width:480px;margin:0 auto;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f2ede8;color:#1a1a1a;font-size:16px}
-.hdr{background:#C0392B;color:#fff;padding:20px 16px 16px;text-align:center}
-.hdr-ring{width:66px;height:66px;border-radius:50%;background:#fff;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;border:3px solid rgba(255,255,255,0.35);font-size:22px;font-weight:500;color:#C0392B}
-.hdr h1{font-size:22px;font-weight:500;line-height:1.2}
-.hdr p{font-size:13px;opacity:0.82;margin-top:5px}
-.tabs-wrap{background:#fff;border-bottom:0.5px solid rgba(0,0,0,0.1);display:flex;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
-.tabs-wrap::-webkit-scrollbar{display:none}
-.tab{flex-shrink:0;padding:14px 15px;font-size:13px;font-weight:500;color:#666;border:none;background:none;cursor:pointer;border-bottom:2.5px solid transparent;white-space:nowrap;min-height:48px;display:flex;align-items:center}
-.tab.on{color:#C0392B;border-bottom-color:#C0392B}
-.section{padding:14px;display:none}
-.section.on{display:block}
-.sec-lbl{font-size:11px;font-weight:500;color:#888;letter-spacing:0.9px;text-transform:uppercase;margin-bottom:12px}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-@media(max-width:360px){.grid2{grid-template-columns:1fr}}
-.card{background:#fff;border:0.5px solid rgba(0,0,0,0.1);border-radius:14px;overflow:hidden;transition:border-color 0.15s}
-.card.sel{border:2px solid #C0392B}
-.card-img{width:100%;height:120px;object-fit:cover;display:block;background:#f0ebe5}
-.card-img-ph{width:100%;height:120px;display:none;align-items:center;justify-content:center;font-size:40px;background:#faf5f0}
-.card-body{padding:11px 12px 13px}
-.card-code{font-size:11px;font-weight:500;color:#C0392B;margin-bottom:3px;letter-spacing:0.4px}
-.card-name{font-size:14px;font-weight:500;color:#1a1a1a;line-height:1.35}
-.card-desc{font-size:12px;color:#888;margin-top:3px;line-height:1.4}
-.card-footer{display:flex;align-items:center;justify-content:space-between;margin-top:10px;gap:6px}
-.card-price{font-size:15px;font-weight:500;color:#C0392B;flex-shrink:0}
-.qty-row{display:flex;align-items:center;gap:8px;flex-shrink:0}
-.qb{width:36px;height:36px;min-width:36px;border-radius:50%;border:2px solid #C0392B;background:none;color:#C0392B;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;transition:all 0.12s;padding:0;touch-action:manipulation}
-.qb:active{background:#C0392B;color:#fff;transform:scale(0.9)}
-.qn{font-size:16px;font-weight:500;min-width:20px;text-align:center;color:#1a1a1a}
-.chicken-banner{background:#C0392B;border-radius:13px;padding:14px;margin-bottom:12px;color:#fff}
-.cb-title{font-size:14px;font-weight:500;margin-bottom:10px}
-.cb-prices{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.cb-item{background:rgba(255,255,255,0.15);border-radius:9px;padding:10px 12px;font-size:14px;font-weight:500;cursor:pointer;border:1.5px solid transparent;transition:background 0.12s;touch-action:manipulation}
-.cb-item:active{background:rgba(255,255,255,0.3)}
-.cb-item.sel{border-color:#fff;background:rgba(255,255,255,0.25)}
-.cb-item .cb-code{font-size:10px;opacity:0.65;display:block;margin-bottom:2px;letter-spacing:0.3px;font-weight:400}
-.cb-item .cb-price{font-size:12px;opacity:0.82;display:block;margin-top:2px}
-.cb-name{font-weight:500;font-size:14px;margin-top:4px}
-.cb-label{font-size:12px;color:rgba(255,255,255,0.8)}
-.divider{border:none;border-top:0.5px solid rgba(0,0,0,0.1);margin:14px 0}
-.cart-panel{background:#fff;border-top:1px solid rgba(0,0,0,0.12);padding:18px 16px 24px}
-.cart-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:13px}
-.cart-hdr-title{font-size:17px;font-weight:500;color:#1a1a1a}
-.cbadge{background:#C0392B;color:#fff;font-size:12px;font-weight:500;padding:4px 12px;border-radius:99px}
-.empty-cart{font-size:14px;color:#888;padding:6px 0 8px}
-.cline{display:flex;align-items:center;padding:9px 0;border-bottom:0.5px solid rgba(0,0,0,0.08);gap:8px}
-.cline:last-of-type{border:none}
-.cline-name{font-size:14px;color:#1a1a1a;flex:1;line-height:1.3}
-.cline-qty{font-size:13px;color:#888;flex-shrink:0}
-.cline-price{font-size:14px;color:#888;flex-shrink:0}
-.cline-rm{background:none;border:none;color:#888;cursor:pointer;font-size:20px;padding:0 0 0 8px;line-height:1;flex-shrink:0;min-width:32px;min-height:32px;display:flex;align-items:center;justify-content:center}
-.total-row{display:flex;justify-content:space-between;font-size:17px;font-weight:500;padding-top:12px;border-top:0.5px solid rgba(0,0,0,0.12);margin-top:6px}
-.total-price{color:#C0392B}
-.fields{margin-top:14px;display:flex;flex-direction:column;gap:10px}
-.fields input,.fields textarea{width:100%;font-size:16px;padding:14px;border:0.5px solid rgba(0,0,0,0.2);border-radius:11px;background:#fff;color:#1a1a1a;-webkit-appearance:none;appearance:none;font-family:inherit}
-.fields textarea{resize:none;height:80px;line-height:1.5}
-.fields input:focus,.fields textarea:focus{outline:none;border-color:#C0392B;border-width:1.5px}
-.place-btn{width:100%;margin-top:13px;padding:17px;background:#C0392B;color:#fff;border:none;border-radius:13px;font-size:16px;font-weight:500;cursor:pointer;letter-spacing:0.3px;transition:opacity 0.15s;touch-action:manipulation;min-height:56px}
-.place-btn:disabled{opacity:0.38;cursor:not-allowed}
-.place-btn:not(:disabled):active{opacity:0.82}
-.smsg{margin-top:12px;padding:13px 14px;border-radius:10px;font-size:14px;font-weight:500;text-align:center;display:none;line-height:1.4}
-.smsg.ok{background:#d4edda;color:#155724}
-.smsg.err{background:#f8d7da;color:#721c24}
-.smsg.wait{background:#fff3cd;color:#856404}
-</style>
-</head>
-<body>
+<!DOCTYPE html>  <html lang="en">  
+<head>  
+<meta charset="UTF-8">  
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">  
+<title>Island Fried Chicken — Online Menu</title>  
+<style>  
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}  
+html,body{width:100%;max-width:480px;margin:0 auto;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f2ede8;color:#1a1a1a;font-size:16px}  
+.hdr{background:#C0392B;color:#fff;padding:20px 16px 16px;text-align:center}  
+.hdr-ring{width:66px;height:66px;border-radius:50%;background:#fff;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;border:3px solid rgba(255,255,255,0.35);font-size:22px;font-weight:500;color:#C0392B}  
+.hdr h1{font-size:22px;font-weight:500;line-height:1.2}  
+.hdr p{font-size:13px;opacity:0.82;margin-top:5px}  
+.tabs-wrap{background:#fff;border-bottom:0.5px solid rgba(0,0,0,0.1);display:flex;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}  
+.tabs-wrap::-webkit-scrollbar{display:none}  
+.tab{flex-shrink:0;padding:14px 15px;font-size:13px;font-weight:500;color:#666;border:none;background:none;cursor:pointer;border-bottom:2.5px solid transparent;white-space:nowrap;min-height:48px;display:flex;align-items:center}  
+.tab.on{color:#C0392B;border-bottom-color:#C0392B}  
+.section{padding:14px;display:none}  
+.section.on{display:block}  
+.sec-lbl{font-size:11px;font-weight:500;color:#888;letter-spacing:0.9px;text-transform:uppercase;margin-bottom:12px}  
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}  
+@media(max-width:360px){.grid2{grid-template-columns:1fr}}  
+.card{background:#fff;border:0.5px solid rgba(0,0,0,0.1);border-radius:14px;overflow:hidden;transition:border-color 0.15s}  
+.card.sel{border:2px solid #C0392B}  
+.card-img{width:100%;height:120px;object-fit:cover;display:block;background:#f0ebe5}  
+.card-img-ph{width:100%;height:120px;display:none;align-items:center;justify-content:center;font-size:40px;background:#faf5f0}  
+.card-body{padding:11px 12px 13px}  
+.card-code{font-size:11px;font-weight:500;color:#C0392B;margin-bottom:3px;letter-spacing:0.4px}  
+.card-name{font-size:14px;font-weight:500;color:#1a1a1a;line-height:1.35}  
+.card-desc{font-size:12px;color:#888;margin-top:3px;line-height:1.4}  
+.card-footer{display:flex;align-items:center;justify-content:space-between;margin-top:10px;gap:6px}  
+.card-price{font-size:15px;font-weight:500;color:#C0392B;flex-shrink:0}  
+.qty-row{display:flex;align-items:center;gap:8px;flex-shrink:0}  
+.qb{width:36px;height:36px;min-width:36px;border-radius:50%;border:2px solid #C0392B;background:none;color:#C0392B;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;transition:all 0.12s;padding:0;touch-action:manipulation}  
+.qb:active{background:#C0392B;color:#fff;transform:scale(0.9)}  
+.qn{font-size:16px;font-weight:500;min-width:20px;text-align:center;color:#1a1a1a}  
+.chicken-banner{background:#C0392B;border-radius:13px;padding:14px;margin-bottom:12px;color:#fff}  
+.cb-title{font-size:14px;font-weight:500;margin-bottom:10px}  
+.cb-prices{display:grid;grid-template-columns:1fr 1fr;gap:8px}  
+.cb-item{background:rgba(255,255,255,0.15);border-radius:9px;padding:10px 12px;font-size:14px;font-weight:500;cursor:pointer;border:1.5px solid transparent;transition:background 0.12s;touch-action:manipulation}  
+.cb-item:active{background:rgba(255,255,255,0.3)}  
+.cb-item.sel{border-color:#fff;background:rgba(255,255,255,0.25)}  
+.cb-item .cb-code{font-size:10px;opacity:0.65;display:block;margin-bottom:2px;letter-spacing:0.3px;font-weight:400}  
+.cb-item .cb-price{font-size:12px;opacity:0.82;display:block;margin-top:2px}  
+.cb-name{font-weight:500;font-size:14px;margin-top:4px}  
+.cb-label{font-size:12px;color:rgba(255,255,255,0.8)}  
+.divider{border:none;border-top:0.5px solid rgba(0,0,0,0.1);margin:14px 0}  
+.cart-panel{background:#fff;border-top:1px solid rgba(0,0,0,0.12);padding:18px 16px 24px}  
+.cart-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:13px}  
+.cart-hdr-title{font-size:17px;font-weight:500;color:#1a1a1a}  
+.cbadge{background:#C0392B;color:#fff;font-size:12px;font-weight:500;padding:4px 12px;border-radius:99px}  
+.empty-cart{font-size:14px;color:#888;padding:6px 0 8px}  
+.cline{display:flex;align-items:center;padding:9px 0;border-bottom:0.5px solid rgba(0,0,0,0.08);gap:8px}  
+.cline:last-of-type{border:none}  
+.cline-name{font-size:14px;color:#1a1a1a;flex:1;line-height:1.3}  
+.cline-qty{font-size:13px;color:#888;flex-shrink:0}  
+.cline-price{font-size:14px;color:#888;flex-shrink:0}  
+.cline-rm{background:none;border:none;color:#888;cursor:pointer;font-size:20px;padding:0 0 0 8px;line-height:1;flex-shrink:0;min-width:32px;min-height:32px;display:flex;align-items:center;justify-content:center}  
+.total-row{display:flex;justify-content:space-between;font-size:17px;font-weight:500;padding-top:12px;border-top:0.5px solid rgba(0,0,0,0.12);margin-top:6px}  
+.total-price{color:#C0392B}  
+.fields{margin-top:14px;display:flex;flex-direction:column;gap:10px}  
+.fields input,.fields textarea{width:100%;font-size:16px;padding:14px;border:0.5px solid rgba(0,0,0,0.2);border-radius:11px;background:#fff;color:#1a1a1a;-webkit-appearance:none;appearance:none;font-family:inherit}  
+.fields textarea{resize:none;height:80px;line-height:1.5}  
+.fields input:focus,.fields textarea:focus{outline:none;border-color:#C0392B;border-width:1.5px}  
+.place-btn{width:100%;margin-top:13px;padding:17px;background:#C0392B;color:#fff;border:none;border-radius:13px;font-size:16px;font-weight:500;cursor:pointer;letter-spacing:0.3px;transition:opacity 0.15s;touch-action:manipulation;min-height:56px}  
+.place-btn:disabled{opacity:0.38;cursor:not-allowed}  
+.place-btn:not(:disabled):active{opacity:0.82}  
+.smsg{margin-top:12px;padding:13px 14px;border-radius:10px;font-size:14px;font-weight:500;text-align:center;display:none;line-height:1.4}  
+.smsg.ok{background:#d4edda;color:#155724}  
+.smsg.err{background:#f8d7da;color:#721c24}  
+.smsg.wait{background:#fff3cd;color:#856404}  
+</style>  
+</head>  
+<body>  <div class="hdr">  
+  <div class="hdr-ring">IFC</div>  
+  <h1>Island Fried Chicken</h1>  
+  <p>Real Taste of Fried Chicken — Hulhumale, Maldives</p>  
+</div>  <div class="tabs-wrap" id="tabs">  
+  <button class="tab on" data-sec="individual">Individual</button>  
+  <button class="tab" data-sec="budget">Budget</button>  
+  <button class="tab" data-sec="lunch">Lunch</button>  
+  <button class="tab" data-sec="kids">Kids</button>  
+  <button class="tab" data-sec="family">Family</button>  
+  <button class="tab" data-sec="chicken">Chicken</button>  
+  <button class="tab" data-sec="sides">Sides</button>  
+  <button class="tab" data-sec="wraps">Wraps</button>  
+  <button class="tab" data-sec="burgers">Burgers</button>  
+  <button class="tab" data-sec="pizza">Pizza</button>  
+  <button class="tab" data-sec="otg">On The Go</button>  
+  <button class="tab" data-sec="drinks">Drinks</button>  
+</div>  <div id="individual" class="section on"><div class="sec-lbl">Individual Meals</div><div class="grid2" id="g-individual"></div></div>  
+<div id="budget" class="section"><div class="sec-lbl">Budget Meals</div><div class="grid2" id="g-budget"></div></div>  
+<div id="lunch" class="section"><div class="sec-lbl">Lunch Meals</div><div class="grid2" id="g-lunch"></div></div>  
+<div id="kids" class="section"><div class="sec-lbl">Kids Meals</div><div class="grid2" id="g-kids"></div></div>  
+<div id="family" class="section"><div class="sec-lbl">Family Meals</div><div class="grid2" id="g-family"></div></div>  
+<div id="chicken" class="section">  
+  <div class="sec-lbl">IFC Chicken Buckets</div>  
+  <div class="chicken-banner"><div class="cb-title">Tap a size to add to your order</div><div class="cb-prices" id="bucket-grid"></div></div>  
+  <div class="sec-lbl">IFC Delicious</div>  
+  <div class="grid2" id="g-delicious"></div>  
+</div>  
+<div id="sides" class="section"><div class="sec-lbl">Side Items</div><div class="grid2" id="g-sides"></div></div>  
+<div id="wraps" class="section"><div class="sec-lbl">Wrap Specials</div><div class="grid2" id="g-wraps"></div></div>  
+<div id="burgers" class="section"><div class="sec-lbl">Burgers &amp; Mini Subs</div><div class="grid2" id="g-burgers"></div></div>  
+<div id="pizza" class="section">  
+  <div class="sec-lbl">Pizza</div><div class="grid2" id="g-pizza"></div>  
+  <div class="divider"></div>  
+  <div class="sec-lbl">Cone Pizza</div><div class="grid2" id="g-conepizza"></div>  
+</div>  
+<div id="otg" class="section"><div class="sec-lbl">On The Go</div><div class="grid2" id="g-otg"></div></div>  
+<div id="drinks" class="section"><div class="sec-lbl">Drinks</div><div class="grid2" id="g-drinks"></div></div>  <div class="cart-panel">  
+  <div class="cart-hdr"><span class="cart-hdr-title">Your Order</span><span class="cbadge" id="cbadge">0 items</span></div>  
+  <div id="cart-lines"><div class="empty-cart">No items yet — tap any meal to add it.</div></div>  
+  <div class="fields">  
+    <input type="text" id="cname" placeholder="Your name" autocomplete="name" />  
+    <input type="tel" id="cphone" placeholder="Phone number (e.g. 7123456)" autocomplete="tel" inputmode="numeric" />  
+    <textarea id="caddress" placeholder="Delivery address (flat no., building, street...)"></textarea>  
+  </div>  
+  <button class="place-btn" id="place-btn" disabled>Place Order</button>  
+  <div class="smsg" id="smsg"></div>  
+</div>  <script>  
+// Switch to /webhook/ (remove "-test") once your workflow is activated in n8n  
+const WEBHOOK = "https://kurama7417.app.n8n.cloud/webhook-test/367e61e9-bc0b-4a82-9964-bcf208bbf511";  
+  
+const IMGS = {  
+  individual: "https://images.unsplash.com/photo-1626645738196-c2a7c87a8f58?w=400&q=80&auto=format&fit=crop",  
+  budget:     "https://images.unsplash.com/photo-1561758033-d89a9ad46330?w=400&q=80&auto=format&fit=crop",  
+  ricemeal:   "https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=400&q=80&auto=format&fit=crop",  
+  lunch:      "https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?w=400&q=80&auto=format&fit=crop",  
+  kids:       "https://images.unsplash.com/photo-1592415486689-125cbbfcdfed?w=400&q=80&auto=format&fit=crop",  
+  family:     "https://images.unsplash.com/photo-1569058242567-93de6f36f8eb?w=400&q=80&auto=format&fit=crop",  
+  chicken:    "https://images.unsplash.com/photo-1567620832903-9fc6debc209f?w=400&q=80&auto=format&fit=crop",  
+  strips:     "https://images.unsplash.com/photo-1562967914-608f82629710?w=400&q=80&auto=format&fit=crop",  
+  fries:      "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=400&q=80&auto=format&fit=crop",  
+  nuggets:    "https://images.unsplash.com/photo-1619881589316-1a4ef1c91b78?w=400&q=80&auto=format&fit=crop",  
+  wrap:       "https://images.unsplash.com/photo-1598515214211-89d3c73ae83b?w=400&q=80&auto=format&fit=crop",  
+  burger:     "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&q=80&auto=format&fit=crop",  
+  sub:        "https://images.unsplash.com/photo-1509722747041-616f39b57569?w=400&q=80&auto=format&fit=crop",  
+  pizza:      "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=400&q=80&auto=format&fit=crop",  
+  conepizza:  "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=400&q=80&auto=format&fit=crop",  
+  waffle:     "https://images.unsplash.com/photo-1484723091739-30a097e8f929?w=400&q=80&auto=format&fit=crop",  
+  coke:       "https://images.unsplash.com/photo-1554866585-cd94860890b7?w=400&q=80&auto=format&fit=crop",  
+};  
+  
+// All prices filled. IFC-K6 and IFC-K7 were missing prices — assigned 95 and 89 as placeholder prices.  
+// Item codes normalised to use hyphens (e.g. IFC-A1) so they match cleanly as sheet lookup keys.  
+const menus = {  
+  individual: [  
+    {code:"IFC-A1", name:"Individual Meal A1", desc:"1 Pc Chicken, 1 Pc Strips, 1 Pc Fries",       price:96,  img:IMGS.individual},  
+    {code:"IFC-A2", name:"Individual Meal A2", desc:"1 Pc Chicken, 3 Pcs Strips, Fries (S)",        price:98,  img:IMGS.chicken},  
+    {code:"IFC-A3", name:"Individual Meal A3", desc:"4 Pcs Chicken, 1 Pc Strips, Fries (S)",        price:96,  img:IMGS.chicken},  
+    {code:"IFC-A4", name:"Individual Meal A4", desc:"2 Pcs Chicken, 4 Pcs Wings, Fries (M)",        price:122, img:IMGS.individual},  
+  ],  
+  budget: [  
+    {code:"IFC-B1", name:"Budget Meal B1", desc:"1 IFC Wing, Chickpop (8), Fries (S), 1 Cone",     price:123, img:IMGS.budget},  
+    {code:"IFC-B2", name:"Budget Meal B2", desc:"1 IFC Burger, 2 Pcs Chicken, Fries (M)",           price:122, img:IMGS.burger},  
+    {code:"IFC-B3", name:"Budget Meal B3", desc:"2 Pcs Chicken, Chickpop (8), Fries (S), 1 Cone",  price:103, img:IMGS.budget},  
+    {code:"IFC-B4", name:"Budget Meal B4", desc:"3 Pcs Chicken, 4 Pcs Strips, Fries (M)",          price:212, img:IMGS.chicken},  
+  ],  
+  lunch: [  
+    {code:"IFC-F1", name:"Lunch Meal F1",   desc:"Chicken Rice & Rice",                price:69, img:IMGS.ricemeal},  
+    {code:"IFC-F2", name:"Lunch Meal F2",   desc:"1/2 Chicken Rice, Rice & 1 Coke",   price:69, img:IMGS.ricemeal},  
+    {code:"IFC-F3", name:"Lunch Meal F3",   desc:"3 Pcs Chicken Rice, Rice & 1 Coke", price:69, img:IMGS.ricemeal},  
+    {code:"IFC-F4", name:"Lunch Meal F4",   desc:"Fried Grilled Rice & 1 Coke",       price:89, img:IMGS.ricemeal},  
+    {code:"IFC-F5", name:"Lunch Meal F5",   desc:"Chicken Fried Rice",                price:75, img:IMGS.ricemeal},  
+    {code:"IFC-F6", name:"IFC Nasi Goreng", desc:"Special Nasi Goreng",               price:80, img:IMGS.lunch},  
+    {code:"IFC-F7", name:"IFC Tuna Rice",   desc:"Tuna Rice special meal",            price:65, img:IMGS.lunch},  
+  ],  
+  kids: [  
+    {code:"IFC-G1", name:"Kids Meal G1", desc:"2 Pcs Strips + Milkshake (S)",      price:69, img:IMGS.strips},  
+    {code:"IFC-G2", name:"Kids Meal G2", desc:"1 Pc Chicken + Milkshake (S)",      price:69, img:IMGS.kids},  
+    {code:"IFC-G3", name:"Kids Meal G3", desc:"2 Pcs Strips + Fries (S)",          price:69, img:IMGS.strips},  
+    {code:"IFC-G4", name:"Kids Meal G4", desc:"1 Pc Chicken, Fries (S) & 1 Coke", price:69, img:IMGS.kids},  
+  ],  
+  family: [  
+    {code:"IFC-K1", name:"Family Meal A",   desc:"1 Chicken, 8 Pcs Strips, 3 Large Sides & 3 Coke 600ml",   price:349, img:IMGS.family},  
+    {code:"IFC-K2", name:"Family Meal B",   desc:"12 Pcs Chicken, 8 Strips, 3 Crispy Burgers, Chickpop 20", price:449, img:IMGS.family},  
+    {code:"IFC-K3", name:"Family Meal K3",  desc:"Tandoori family pack",                                     price:130, img:IMGS.pizza},  
+    {code:"IFC-K4", name:"Family Meal K4",  desc:"Chicken & Mushroom family",                                price:125, img:IMGS.pizza},  
+    {code:"IFC-K5", name:"Family Meal K5",  desc:"BBQ Beef Pepperoni family",                                price:130, img:IMGS.pizza},  
+    {code:"IFC-K6", name:"IFC K6 Sausage",  desc:"Sausage family meal",                                     price:95,  img:IMGS.family},  
+    {code:"IFC-K7", name:"IFC K7 Crispy",   desc:"Crispy family meal",                                      price:89,  img:IMGS.chicken},  
+  ],  
+  delicious: [  
+    {code:"IFC-DEL1", name:"Chicken Strips 5 Pcs",  desc:"5 golden crispy chicken strips",  price:65,  img:IMGS.strips},  
+    {code:"IFC-DEL2", name:"Chicken Strips 10 Pcs", desc:"10 golden crispy chicken strips", price:100, img:IMGS.strips},  
+  ],  
+  sides: [  
+    {code:"SIDE-1", name:"Chicken Nuggets 5 Pcs", desc:"5 golden nuggets",        price:50, img:IMGS.nuggets},  
+    {code:"SIDE-2", name:"Chicken 1 Pc",          desc:"1 piece crispy chicken",  price:36, img:IMGS.chicken},  
+    {code:"SIDE-3", name:"Chicken 2 Pcs",         desc:"2 pieces crispy chicken", price:50, img:IMGS.chicken},  
+    {code:"SIDE-4", name:"Chickpop 20",           desc:"20 pcs chickpop bites",   price:30, img:IMGS.nuggets},  
+    {code:"SIDE-5", name:"Fries (S)",             desc:"Small crispy fries",      price:20, img:IMGS.fries},  
+    {code:"SIDE-6", name:"Fries (M)",             desc:"Medium crispy fries",     price:30, img:IMGS.fries},  
+    {code:"SIDE-7", name:"Chickpop (S)",          desc:"Small chickpop",          price:20, img:IMGS.nuggets},  
+    {code:"SIDE-8", name:"Chickpop (M)",          desc:"Medium chickpop",         price:25, img:IMGS.nuggets},  
+  ],  
+  wraps: [  
+    {code:"IFC-C1", name:"Grilled Wrap", desc:"Grilled chicken wrap", price:59, img:IMGS.wrap},  
+    {code:"IFC-C2", name:"Tuna Wrap",    desc:"Tuna wrap special",    price:59, img:IMGS.wrap},  
+    {code:"IFC-C3", name:"Crispy Wrap",  desc:"Crispy chicken wrap",  price:59, img:IMGS.wrap},  
+    {code:"IFC-C4", name:"Texas Wrap",   desc:"Texas style wrap",     price:59, img:IMGS.wrap},  
+  ],  
+  burgers: [  
+    {code:"IFC-D1", name:"Crispy Burger",             desc:"Classic crispy chicken burger", price:65, img:IMGS.burger},  
+    {code:"IFC-D2", name:"Tandoori Burger",           desc:"Tandoori spiced burger",        price:65, img:IMGS.burger},  
+    {code:"IFC-D3", name:"C.W. Burger",               desc:"Chicken & Waffle burger",       price:65, img:IMGS.burger},  
+    {code:"IFC-D4", name:"Beef Burger",               desc:"100% beef patty burger",        price:75, img:IMGS.burger},  
+    {code:"IFC-E1", name:"Mini Sub Toasted + Cheese", desc:"Toasted mini sub with cheese",  price:69, img:IMGS.sub},  
+    {code:"IFC-E2", name:"Mini Sub Crispy",           desc:"Crispy chicken mini sub",       price:69, img:IMGS.sub},  
+    {code:"IFC-E3", name:"Mini Sub Deli",             desc:"Deli style mini sub",           price:69, img:IMGS.sub},  
+  ],  
+  pizza: [  
+    {code:"IFC-P1", name:"Kids Special Pizza",       desc:"L: MVR 110 / M: MVR 59", price:110, img:IMGS.pizza},  
+    {code:"IFC-P2", name:"Cheesy Chilli Pizza",      desc:"L: MVR 120 / M: MVR 59", price:120, img:IMGS.pizza},  
+    {code:"IFC-P3", name:"BBQ Pizza",                desc:"L: MVR 130 / M: MVR 59", price:130, img:IMGS.pizza},  
+    {code:"IFC-P4", name:"Tandoori Pizza",           desc:"L: MVR 130 / M: MVR 59", price:130, img:IMGS.pizza},  
+    {code:"IFC-P5", name:"Chicken & Mushroom Pizza", desc:"L: MVR 100 / M: MVR 59", price:100, img:IMGS.pizza},  
+    {code:"IFC-P6", name:"BBQ Beef Pepperoni Pizza", desc:"L: MVR 125 / M: MVR 59", price:125, img:IMGS.pizza},  
+  ],  
+  conepizza: [  
+    {code:"IFC-J1", name:"Cone Pizza Medium",  desc:"Classic medium cone pizza", price:39, img:IMGS.conepizza},  
+    {code:"IFC-J2", name:"Cone Pizza Crispy",  desc:"Crispy cone pizza",         price:39, img:IMGS.conepizza},  
+    {code:"IFC-J3", name:"Cone Pizza BBQ",     desc:"BBQ flavour cone pizza",    price:39, img:IMGS.conepizza},  
+    {code:"IFC-J4", name:"Cone Pizza Classic", desc:"Classic cone pizza",        price:39, img:IMGS.conepizza},  
+  ],  
+  otg: [  
+    {code:"IFC-H1", name:"Chicken Waffle",  desc:"Crispy chicken waffle on the go",  price:35, img:IMGS.waffle},  
+    {code:"IFC-H2", name:"Spring Potato",   desc:"Crispy spring potato",             price:35, img:IMGS.fries},  
+    {code:"IFC-H3", name:"Bubble Waffles",  desc:"Nutella / Strawberry / Chocolate", price:45, img:IMGS.waffle},  
+    {code:"IFC-H4", name:"Lollipop Waffle", desc:"Fun lollipop waffle treat",        price:35, img:IMGS.waffle},  
+  ],  
+  drinks: [  
+    {code:"DRINK-1", name:"Coke 330ml",  desc:"330ml chilled can",    price:18, img:IMGS.coke},  
+    {code:"DRINK-2", name:"Coke 600ml",  desc:"600ml chilled bottle", price:25, img:IMGS.coke},  
+    {code:"DRINK-3", name:"Water 500ml", desc:"Still water 500ml",    price:10, img:IMGS.coke},  
+    {code:"DRINK-4", name:"Water 1L",    desc:"Still water 1 litre",  price:15, img:IMGS.coke},  
+  ],  
+};  
+  
+const buckets = [  
+  {code:"IFC-BKT4",  name:"IFC Chicken Bucket 4 Pcs",  label:"4 Pcs",  price:100},  
+  {code:"IFC-BKT6",  name:"IFC Chicken Bucket 6 Pcs",  label:"6 Pcs",  price:149},  
+  {code:"IFC-BKT9",  name:"IFC Chicken Bucket 9 Pcs",  label:"9 Pcs",  price:219},  
+  {code:"IFC-BKT12", name:"IFC Chicken Bucket 12 Pcs", label:"12 Pcs", price:259},  
+];  
+  
+// Cart keyed by item code (unique, stable, matches sheet "Item Code" column)  
+const cart = {};  
+  
+// ─── Validation ───────────────────────────────────────────────────────────────  
+  
+function validateName(v) {  
+  return /^[A-Za-z\s]{2,}$/.test(v);  
+}  
+  
+function normalisePhone(v) {  
+  // Strip +960 or 960 prefix if customer enters it, then return the 7-digit core  
+  return v.replace(/^\+?960/, "").replace(/\s/g, "");  
+}  
+  
+function validatePhone(v) {  
+  return /^[79]\d{6}$/.test(normalisePhone(v));  
+}  
+  
+function validateAddress(v) {  
+  return v.length >= 5;  
+}  
+  
+function showMsg(type, text) {  
+  const el = document.getElementById("smsg");  
+  el.className = "smsg " + type;  
+  el.textContent = text;  
+  el.style.display = "block";  
+}  
+  
+function hideMsg() {  
+  document.getElementById("smsg").style.display = "none";  
+}  
+  
+// ─── Build chicken bucket buttons ────────────────────────────────────────────  
+  
+function buildBuckets() {  
+  const g = document.getElementById("bucket-grid");  
+  g.innerHTML = "";  
+  buckets.forEach(function(b) {  
+    const el      = document.createElement("div");  el.className      = "cb-item"; el.id = "bk_" + b.code;  
+    const codeEl  = document.createElement("span"); codeEl.className  = "cb-code";  codeEl.textContent  = b.code;  
+    const nameEl  = document.createElement("div");  nameEl.className  = "cb-name";  nameEl.textContent  = b.name;  
+    const labelEl = document.createElement("div");  labelEl.className = "cb-label"; labelEl.textContent = b.label;  
+    const priceEl = document.createElement("span"); priceEl.className = "cb-price"; priceEl.textContent = "MVR " + b.price;  
+    el.appendChild(codeEl); el.appendChild(nameEl); el.appendChild(labelEl); el.appendChild(priceEl);  
+    el.addEventListener("click", function() {  
+      Object.keys(cart).filter(function(k){ return k.startsWith("IFC-BKT"); }).forEach(function(k){ delete cart[k]; });  
+      document.querySelectorAll(".cb-item").forEach(function(x){ x.classList.remove("sel"); });  
+      cart[b.code] = {code: b.code, name: b.name, price: b.price, qty: 1};  
+      el.classList.add("sel");  
+      renderCart();  
+    });  
+    g.appendChild(el);  
+  });  
+}  
+  
+// ─── Build product cards ──────────────────────────────────────────────────────  
+  
+function buildCards(gid, items) {  
+  const g = document.getElementById(gid);  
+  if (!g) return;  
+  g.innerHTML = "";  
+  items.forEach(function(item) {  
+    const card = document.createElement("div"); card.className = "card"; card.id = "card_" + item.code;  
+  
+    const img = document.createElement("img");  
+    img.className = "card-img"; img.src = item.img; img.alt = item.name; img.loading = "lazy";  
+    img.onerror = function(){ this.style.display="none"; this.nextSibling.style.display="flex"; };  
+  
+    const ph = document.createElement("div"); ph.className = "card-img-ph"; ph.innerHTML = "&#x1F357;";  
+  
+    const body     = document.createElement("div");  body.className     = "card-body";  
+    const codeDiv  = document.createElement("div");  codeDiv.className  = "card-code";  codeDiv.textContent  = item.code;  
+    const nameDiv  = document.createElement("div");  nameDiv.className  = "card-name";  nameDiv.textContent  = item.name;  
+    const descDiv  = document.createElement("div");  descDiv.className  = "card-desc";  descDiv.textContent  = item.desc;  
+    const footer   = document.createElement("div");  footer.className   = "card-footer";  
+    const priceDiv = document.createElement("div");  priceDiv.className = "card-price"; priceDiv.textContent = "MVR " + item.price;  
+  
+    const btnMinus = document.createElement("button");  
+    btnMinus.className = "qb"; btnMinus.type = "button"; btnMinus.innerHTML = "&#x2212;";  
+    btnMinus.addEventListener("click", function(e){ e.stopPropagation(); changeQty(item, -1); });  
+  
+    const qnSpan = document.createElement("span");  
+    qnSpan.className = "qn"; qnSpan.id = "qn_" + item.code; qnSpan.textContent = "0";  
+  
+    const btnPlus = document.createElement("button");  
+    btnPlus.className = "qb"; btnPlus.type = "button"; btnPlus.innerHTML = "&#x2B;";  
+    btnPlus.addEventListener("click", function(e){ e.stopPropagation(); changeQty(item, 1); });  
+  
+    const qtyRow = document.createElement("div"); qtyRow.className = "qty-row";  
+    qtyRow.appendChild(btnMinus); qtyRow.appendChild(qnSpan); qtyRow.appendChild(btnPlus);  
+    footer.appendChild(priceDiv); footer.appendChild(qtyRow);  
+    body.appendChild(codeDiv); body.appendChild(nameDiv); body.appendChild(descDiv); body.appendChild(footer);  
+    card.appendChild(img); card.appendChild(ph); card.appendChild(body);  
+    g.appendChild(card);  
+  });  
+}  
+  
+Object.keys(menus).forEach(function(k){  
+  if (document.getElementById("g-" + k)) buildCards("g-" + k, menus[k]);  
+});  
+buildBuckets();  
+  
+// ─── Cart operations ──────────────────────────────────────────────────────────  
+  
+function changeQty(item, delta) {  
+  const cur    = cart[item.code] ? cart[item.code].qty : 0;  
+  const newQty = Math.min(20, Math.max(0, cur + delta));  
+  if (newQty === 0) { delete cart[item.code]; }  
+  else { cart[item.code] = {code: item.code, name: item.name, price: item.price, qty: newQty}; }  
+  const qnEl   = document.getElementById("qn_" + item.code);  
+  const cardEl = document.getElementById("card_" + item.code);  
+  if (qnEl)   qnEl.textContent = newQty;  
+  if (cardEl) cardEl.className = newQty > 0 ? "card sel" : "card";  
+  renderCart();  
+}  
+  
+function removeFromCart(code) {  
+  if (!cart[code]) return;  
+  if (code.startsWith("IFC-BKT")) {  
+    const el = document.getElementById("bk_" + code);  
+    if (el) el.classList.remove("sel");  
+  } else {  
+    const cardEl = document.getElementById("card_" + code);  
+    const qnEl   = document.getElementById("qn_" + code);  
+    if (cardEl) cardEl.className = "card";  
+    if (qnEl)   qnEl.textContent = "0";  
+  }  
+  delete cart[code];  
+  renderCart();  
+}  
+  
+function renderCart() {  
+  const keys  = Object.keys(cart);  
+  const badge = document.getElementById("cbadge");  
+  const lines = document.getElementById("cart-lines");  
+  const btn   = document.getElementById("place-btn");  
+  const total = keys.reduce(function(s,k){ return s + cart[k].qty; }, 0);  
+  badge.textContent = total + (total === 1 ? " item" : " items");  
+  
+  if (keys.length === 0) {  
+    lines.innerHTML = '<div class="empty-cart">No items yet — tap any meal to add it.</div>';  
+    btn.disabled = true;  
+    return;  
+  }  
+  
+  let sum = 0;  
+  lines.innerHTML = "";  
+  keys.forEach(function(code) {  
+    const c   = cart[code];  
+    const sub = c.price * c.qty;  
+    sum += sub;  
+    const line      = document.createElement("div");  line.className      = "cline";  
+    const nameSpan  = document.createElement("span"); nameSpan.className  = "cline-name";  nameSpan.textContent  = c.name;  
+    const qtySpan   = document.createElement("span"); qtySpan.className   = "cline-qty";   qtySpan.textContent   = "x" + c.qty;  
+    const priceSpan = document.createElement("span"); priceSpan.className = "cline-price"; priceSpan.textContent = "MVR " + sub;  
+    const rmBtn     = document.createElement("button"); rmBtn.className = "cline-rm"; rmBtn.type = "button"; rmBtn.innerHTML = "&#x2715;";  
+    rmBtn.addEventListener("click", function(){ removeFromCart(code); });  
+    line.appendChild(nameSpan); line.appendChild(qtySpan); line.appendChild(priceSpan); line.appendChild(rmBtn);  
+    lines.appendChild(line);  
+  });  
+  const totalRow = document.createElement("div"); totalRow.className = "total-row";  
+  totalRow.innerHTML = '<span>Total</span><span class="total-price">MVR ' + sum + '</span>';  
+  lines.appendChild(totalRow);  
+  btn.disabled = false;  
+}  
+  
+// ─── Tab switching ────────────────────────────────────────────────────────────  
+  
+document.getElementById("tabs").addEventListener("click", function(e) {  
+  const t = e.target.closest(".tab");  
+  if (!t) return;  
+  document.querySelectorAll(".tab").forEach(function(x){ x.classList.remove("on"); });  
+  document.querySelectorAll(".section").forEach(function(x){ x.classList.remove("on"); });  
+  t.classList.add("on");  
+  const sec = document.getElementById(t.dataset.sec);  
+  if (sec) sec.classList.add("on");  
+});  
+  
+// ─── Place Order Handler ─────────────────────────────────────────────────────
+document.getElementById("place-btn").addEventListener("click", async function() {
+  const nameInput    = document.getElementById("cname").value.trim();
+  const phoneInput   = document.getElementById("cphone").value.trim();
+  const addressInput = document.getElementById("caddress").value.trim();
 
-<div class="hdr">
-  <div class="hdr-ring">IFC</div>
-  <h1>Island Fried Chicken</h1>
-  <p>Real Taste of Fried Chicken — Hulhumale, Maldives</p>
-</div>
+  // Validate fields
+  if (!validateName(nameInput) || !validatePhone(phoneInput) || !validateAddress(addressInput)) {
+    showMsg("err", "Please fill all fields correctly");
+    return;
+  }
 
-<div class="tabs-wrap" id="tabs">
-  <button class="tab on" data-sec="individual">Individual</button>
-  <button class="tab" data-sec="budget">Budget</button>
-  <button class="tab" data-sec="lunch">Lunch</button>
-  <button class="tab" data-sec="kids">Kids</button>
-  <button class="tab" data-sec="family">Family</button>
-  <button class="tab" data-sec="chicken">Chicken</button>
-  <button class="tab" data-sec="sides">Sides</button>
-  <button class="tab" data-sec="wraps">Wraps</button>
-  <button class="tab" data-sec="burgers">Burgers</button>
-  <button class="tab" data-sec="pizza">Pizza</button>
-  <button class="tab" data-sec="otg">On The Go</button>
-  <button class="tab" data-sec="drinks">Drinks</button>
-</div>
-
-<div id="individual" class="section on"><div class="sec-lbl">Individual Meals</div><div class="grid2" id="g-individual"></div></div>
-<div id="budget" class="section"><div class="sec-lbl">Budget Meals</div><div class="grid2" id="g-budget"></div></div>
-<div id="lunch" class="section"><div class="sec-lbl">Lunch Meals</div><div class="grid2" id="g-lunch"></div></div>
-<div id="kids" class="section"><div class="sec-lbl">Kids Meals</div><div class="grid2" id="g-kids"></div></div>
-<div id="family" class="section"><div class="sec-lbl">Family Meals</div><div class="grid2" id="g-family"></div></div>
-<div id="chicken" class="section">
-  <div class="sec-lbl">IFC Chicken Buckets</div>
-  <div class="chicken-banner"><div class="cb-title">Tap a size to add to your order</div><div class="cb-prices" id="bucket-grid"></div></div>
-  <div class="sec-lbl">IFC Delicious</div>
-  <div class="grid2" id="g-delicious"></div>
-</div>
-<div id="sides" class="section"><div class="sec-lbl">Side Items</div><div class="grid2" id="g-sides"></div></div>
-<div id="wraps" class="section"><div class="sec-lbl">Wrap Specials</div><div class="grid2" id="g-wraps"></div></div>
-<div id="burgers" class="section"><div class="sec-lbl">Burgers &amp; Mini Subs</div><div class="grid2" id="g-burgers"></div></div>
-<div id="pizza" class="section">
-  <div class="sec-lbl">Pizza</div><div class="grid2" id="g-pizza"></div>
-  <div class="divider"></div>
-  <div class="sec-lbl">Cone Pizza</div><div class="grid2" id="g-conepizza"></div>
-</div>
-<div id="otg" class="section"><div class="sec-lbl">On The Go</div><div class="grid2" id="g-otg"></div></div>
-<div id="drinks" class="section"><div class="sec-lbl">Drinks</div><div class="grid2" id="g-drinks"></div></div>
-
-<div class="cart-panel">
-  <div class="cart-hdr"><span class="cart-hdr-title">Your Order</span><span class="cbadge" id="cbadge">0 items</span></div>
-  <div id="cart-lines"><div class="empty-cart">No items yet — tap any meal to add it.</div></div>
-  <div class="fields">
-    <input type="text" id="cname" placeholder="Your name" autocomplete="name" />
-    <input type="tel" id="cphone" placeholder="Phone number (e.g. 7123456)" autocomplete="tel" inputmode="numeric" />
-    <textarea id="caddress" placeholder="Delivery address (flat no., building, street...)"></textarea>
-  </div>
-  <button class="place-btn" id="place-btn" disabled>Place Order</button>
-  <div class="smsg" id="smsg"></div>
-</div>
-
-<script>
-// ─── WEBHOOK ────────────────────────────────────────────────────────────────
-const WEBHOOK = "https://kurama7417.app.n8n.cloud/webhook/367e61e9-bc0b-4a82-9964-bcf208bbf511";
-
-// ─── IMAGES, MENUS, BUCKETS ─────────────────────────────────────────────────
-const IMGS = { /* your previous image mapping */ };
-const menus = { /* your previous menus object */ };
-const buckets = [ /* your previous buckets object */ ];
-
-// ─── CART ─────────────────────────────────────────────────────────────────
-const cart = {};
-
-// ─── VALIDATION ───────────────────────────────────────────────────────────
-function validateName(v){return /^[A-Za-z\s]{2,}$/.test(v);}
-function normalisePhone(v){return v.replace(/^\+?960/, "").replace(/\s/g,"");}
-function validatePhone(v){return /^[79]\d{6}$/.test(normalisePhone(v));}
-function validateAddress(v){return v.length >= 5;}
-function showMsg(type,text){const el=document.getElementById("smsg");el.className="smsg "+type;el.textContent=text;el.style.display="block";}
-function hideMsg(){document.getElementById("smsg").style.display="none";}
-
-// ─── BUILD CARDS & BUCKETS ────────────────────────────────────────────────
-// ... keep all your previous buildCards and buildBuckets functions unchanged ...
-
-// ─── CART OPERATIONS ──────────────────────────────────────────────────────
-// ... keep all your previous changeQty, removeFromCart, renderCart functions unchanged ...
-
-// ─── TAB SWITCHING ─────────────────────────────────────────────────────────
-document.getElementById("tabs").addEventListener("click",function(e){const t=e.target.closest(".tab");if(!t)return;document.querySelectorAll(".tab").forEach(x=>x.classList.remove("on"));document.querySelectorAll(".section").forEach(x=>x.classList.remove("on"));t.classList.add("on");const sec=document.getElementById(t.dataset.sec);if(sec)sec.classList.add("on");});
-
-// ─── PLACE ORDER HANDLER ───────────────────────────────────────────────────
-document.getElementById("place-btn").addEventListener("click", async function(){
   hideMsg();
-  const name    = document.getElementById("cname").value.trim();
-  const phone   = document.getElementById("cphone").value.trim();
-  const address = document.getElementById("caddress").value.trim();
-  if(!validateName(name)){showMsg("err","Please enter a valid name."); return;}
-  if(!validatePhone(phone)){showMsg("err","Please enter a valid phone number."); return;}
-  if(!validateAddress(address)){showMsg("err","Please enter a valid address."); return;}
-  const payload = {customer:{name,phone,address},items:Object.values(cart)};
-  showMsg("wait","Processing order...");
-  try{
-    const res = await fetch(WEBHOOK,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
+  showMsg("wait", "Processing your order...");
+
+  const orderData = {
+    customer_name: nameInput,
+    phone: normalisePhone(phoneInput),
+    address: addressInput,
+    items: Object.values(cart)
+  };
+
+  try {
+    const res = await fetch(WEBHOOK, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(orderData)
+    });
+
     const data = await res.json();
-    if(data.output && typeof data.output==="string"){
-      showMsg(data.status==="error"?"err":"ok", data.output);
-      if(data.status==="error"){
-        Object.keys(cart).forEach(c=>delete cart[c]);
-        renderCart();
-      }
+
+    // Determine if the workflow reported success or error
+    const isSuccess = res.ok && data.output && !/out of stock/i.test(data.output);
+
+    // Show workflow message
+    if (data.output) {
+      showMsg(isSuccess ? "ok" : "err", data.output);
     } else {
-      showMsg("err","Invalid response from server.");
+      showMsg("err", "Invalid response from server");
     }
-  }catch(e){showMsg("err","Network or server error.");}
+
+    // If error, disable cart & place button to prevent resubmission
+    if (!isSuccess) {
+      Object.keys(cart).forEach(removeFromCart); // clear cart
+      document.getElementById("place-btn").disabled = true;
+    }
+
+  } catch (err) {
+    showMsg("err", "Failed to connect to the server");
+    console.error(err);
+  }
 });
-</script>
-</body>
+</script>  
+</body>  
 </html>
