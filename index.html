@@ -475,21 +475,15 @@ document.getElementById("place-btn").addEventListener("click", function() {
   // ─────────────────────────────────────────────────────────────────────────
   
   // Send to webhook  
-  fetch(WEBHOOK, {  
-    method: "POST",  
-    headers: { "Content-Type": "application/json" },  
-    body: JSON.stringify(payload)  
-  })
-  .then(function(res) {
-    // Parse JSON regardless of HTTP status so we can read the AI agent's message
-    return res.json().then(function(data) {
-      return { ok: res.ok, data: data };
-    });
+  fetch(WEBHOOK, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
   })
   .then(function(res) {
     btn.disabled = false;
-    // Display exactly what the AI agent returns from the Respond to Webhook node
     return res.text().then(function(text) {
+      // Display exactly what the AI agent outputs from the Respond to Webhook node
       showMsg("ok", text);
     });
   })
