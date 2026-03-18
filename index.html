@@ -483,9 +483,11 @@ document.getElementById("place-btn").addEventListener("click", function() {
   })
   .then(function(res) {
     btn.disabled = false;
-    return res.json().then(function(data) {
+    return res.text().then(function(raw) {
+      var data = {};
+      try { data = JSON.parse(raw); } catch(e) { data = { status: "error", message: raw }; }
       var status  = (data.status  || "").toLowerCase();
-      var message =  data.message || "";
+      var message =  data.message || raw || "";
       if (status === "success") {
         showMsg("ok",  message);
       } else if (status === "out_of_stock") {
@@ -496,7 +498,6 @@ document.getElementById("place-btn").addEventListener("click", function() {
     });
   })
   .catch(function(err) {
-    // Only shown if the request never reached the server at all
     btn.disabled = false;
     showMsg("err", "Connection error. Please check your internet and try again.");
   });
